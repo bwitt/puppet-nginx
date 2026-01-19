@@ -77,6 +77,10 @@ define nginx::resource::map (
   }
 
   $root_group = $nginx::root_group
+  $_notify    = $nginx::reload ? {
+    true    => Class['nginx::service'],
+    default => undef,
+  }
 
   $conf_dir   = $context ? {
     'stream' => "${nginx::conf_dir}/conf.stream.d",
@@ -103,7 +107,7 @@ define nginx::resource::map (
         'string'        => $string,
       },
     ),
-    notify  => Class['nginx::service'],
+    notify  => $_notify,
     tag     => 'nginx_config_file',
   }
 }

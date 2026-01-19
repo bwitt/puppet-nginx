@@ -142,6 +142,10 @@ define nginx::resource::upstream (
     'stream' => "${nginx::config::conf_dir}/conf.stream.d",
     default  => "${nginx::config::conf_dir}/conf.d",
   }
+  $_notify = $nginx::reload ? {
+    true    => Class['nginx::service'],
+    default => undef,
+  }
 
   Concat {
     owner => 'root',
@@ -151,7 +155,7 @@ define nginx::resource::upstream (
 
   concat { "${conf_dir}/${name}-upstream.conf":
     ensure  => $ensure,
-    notify  => Class['nginx::service'],
+    notify  => $_notify,
     require => File[$conf_dir],
     tag     => 'nginx_config_file',
   }

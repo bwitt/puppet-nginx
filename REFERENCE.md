@@ -238,6 +238,7 @@ The following parameters are available in the `nginx` class:
 * [`service_restart`](#-nginx--service_restart)
 * [`service_name`](#-nginx--service_name)
 * [`service_manage`](#-nginx--service_manage)
+* [`reload`](#-nginx--reload)
 * [`geo_mappings`](#-nginx--geo_mappings)
 * [`geo_mappings_defaults`](#-nginx--geo_mappings_defaults)
 * [`string_mappings`](#-nginx--string_mappings)
@@ -1579,6 +1580,15 @@ Default value: `'nginx'`
 Data type: `Boolean`
 
 
+
+Default value: `true`
+
+##### <a name="-nginx--reload"></a>`reload`
+
+Data type: `Boolean`
+
+Whether config changes should trigger a service reload. When set to false,
+configuration changes will not automatically reload nginx.
 
 Default value: `true`
 

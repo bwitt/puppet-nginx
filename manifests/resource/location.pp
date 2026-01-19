@@ -337,12 +337,16 @@ define nginx::resource::location (
   }
 
   $root_group = $nginx::root_group
+  $_notify    = $nginx::reload ? {
+    true    => Class['nginx::service'],
+    default => undef,
+  }
 
   File {
     owner  => 'root',
     group  => $root_group,
     mode   => $nginx::global_mode,
-    notify => Class['nginx::service'],
+    notify => $_notify,
   }
 
   # # Shared Variables

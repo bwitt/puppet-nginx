@@ -276,6 +276,23 @@ describe 'nginx' do
 
           it { is_expected.not_to contain_service('nginx') }
         end
+
+        describe 'when reload => true (default)' do
+          it { is_expected.to contain_class('nginx::service').that_subscribes_to('Class[nginx::config]') }
+          it { is_expected.to contain_class('nginx::service').that_subscribes_to('Class[nginx::package]') }
+        end
+
+        describe 'when reload => false' do
+          let :params do
+            {
+              reload: false
+            }
+          end
+
+          it { is_expected.not_to contain_class('nginx::service').that_subscribes_to('Class[nginx::config]') }
+          it { is_expected.not_to contain_class('nginx::service').that_subscribes_to('Class[nginx::package]') }
+          it { is_expected.to contain_class('nginx::config').that_comes_before('Class[nginx::service]') }
+        end
       end
 
       # nginx::config
