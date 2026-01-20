@@ -184,6 +184,16 @@ describe 'nginx::resource::location' do
               ]
             },
             {
+              title: 'should contain custom prepended directives as array',
+              attr: 'location_custom_cfg_prepend',
+              value: [
+                'if ($request_method != POST) { return 405; }'
+              ],
+              match: [
+                %r{^ +if \(\$request_method != POST\) \{ return 405; \}}
+              ]
+            },
+            {
               title: 'should contain raw_prepend directives',
               attr: 'raw_prepend',
               value: [
@@ -377,6 +387,16 @@ describe 'nginx::resource::location' do
                 %r{^ +test3\s+subtest1 "sub test value1a"},
                 %r{^ +test3\s+subtest1 "sub test value1b"},
                 %r{^ +test3\s+subtest2 "sub test value2"}
+              ]
+            },
+            {
+              title: 'should contain custom appended directives as array',
+              attr: 'location_custom_cfg_append',
+              value: [
+                'if ($request_method != POST) { return 405; }'
+              ],
+              match: [
+                %r{^ +if \(\$request_method != POST\) \{ return 405; \}}
               ]
             },
             {
