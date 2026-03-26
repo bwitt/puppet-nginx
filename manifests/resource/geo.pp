@@ -58,20 +58,20 @@
 #         intra: *internal_nets
 define nginx::resource::geo (
   Hash[String[1], Array[String[1]]] $networks,
-  Optional[String] $default           = undef,
-  Enum['present', 'absent'] $ensure   = 'present',
-  Boolean $ranges                     = false,
-  Optional[String] $address           = undef,
-  Optional[String] $delete            = undef,
-  Optional[Array] $proxies            = undef,
-  Optional[Boolean] $proxy_recursive  = undef
+  Optional[String] $default = undef,
+  Enum['present', 'absent'] $ensure = 'present',
+  Boolean $ranges = false,
+  Optional[String] $address = undef,
+  Optional[String] $delete = undef,
+  Optional[Array] $proxies = undef,
+  Optional[Boolean] $proxy_recursive = undef
 ) {
-  if ! defined(Class['nginx']) {
+  if !defined(Class['nginx']) {
     fail('You must include the nginx base class before using any defined resources')
   }
 
   $root_group = $nginx::root_group
-  $conf_dir   = "${nginx::conf_dir}/conf.d"
+  $conf_dir = "${nginx::conf_dir}/conf.d"
 
   $ensure_real = $ensure ? {
     'absent' => 'absent',

@@ -5485,7 +5485,7 @@ Default value: `undef`
 
 ##### <a name="-nginx--resource--upstream--member--state"></a>`state`
 
-Data type: `Optional[Enum['drain','down']]`
+Data type: `Optional[Enum['drain', 'down']]`
 
 Set the state for this upstream member
 

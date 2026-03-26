@@ -446,14 +446,14 @@ class nginx (
   contain 'nginx::config'
   contain 'nginx::service'
 
-  create_resources( 'nginx::resource::geo', $geo_mappings, $geo_mappings_defaults)
-  create_resources( 'nginx::resource::snippet', $nginx_snippets, $nginx_snippets_defaults)
-  create_resources( 'nginx::resource::location', $nginx_locations, $nginx_locations_defaults)
-  create_resources( 'nginx::resource::mailhost', $nginx_mailhosts, $nginx_mailhosts_defaults)
-  create_resources( 'nginx::resource::map', $string_mappings, $string_mappings_defaults)
-  create_resources( 'nginx::resource::server', $nginx_servers, $nginx_servers_defaults)
-  create_resources( 'nginx::resource::streamhost', $nginx_streamhosts, $nginx_streamhosts_defaults)
-  create_resources( 'nginx::resource::upstream', $nginx_upstreams, $nginx_upstreams_defaults)
+  create_resources('nginx::resource::geo', $geo_mappings, $geo_mappings_defaults)
+  create_resources('nginx::resource::snippet', $nginx_snippets, $nginx_snippets_defaults)
+  create_resources('nginx::resource::location', $nginx_locations, $nginx_locations_defaults)
+  create_resources('nginx::resource::mailhost', $nginx_mailhosts, $nginx_mailhosts_defaults)
+  create_resources('nginx::resource::map', $string_mappings, $string_mappings_defaults)
+  create_resources('nginx::resource::server', $nginx_servers, $nginx_servers_defaults)
+  create_resources('nginx::resource::streamhost', $nginx_streamhosts, $nginx_streamhosts_defaults)
+  create_resources('nginx::resource::upstream', $nginx_upstreams, $nginx_upstreams_defaults)
 
   # Allow the end user to establish relationships to the "main" class
   # and preserve the relationship to the implementation classes through

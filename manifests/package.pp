@@ -1,12 +1,12 @@
 # @summary Manage NGINX package installation
 # @api private
 class nginx::package {
-  $package_name             = $nginx::package_name
-  $package_source           = $nginx::package_source
-  $package_ensure           = $nginx::package_ensure
-  $package_flavor           = $nginx::package_flavor
+  $package_name = $nginx::package_name
+  $package_source = $nginx::package_source
+  $package_ensure = $nginx::package_ensure
+  $package_flavor = $nginx::package_flavor
   $passenger_package_ensure = $nginx::passenger_package_ensure
-  $manage_repo              = $nginx::manage_repo
+  $manage_repo = $nginx::manage_repo
 
   assert_private()
 
