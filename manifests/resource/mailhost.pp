@@ -150,7 +150,7 @@ define nginx::resource::mailhost (
   Optional[String] $ssl_key                                 = undef,
   Optional[String] $ssl_password_file                       = undef,
   Optional[Stdlib::Port] $ssl_port                          = undef,
-  Optional[Enum['on', 'off']] $ssl_prefer_server_ciphers    = $nginx::ssl_prefer_server_ciphers,
+  Enum['on', 'off'] $ssl_prefer_server_ciphers              = $nginx::ssl_prefer_server_ciphers,
   Optional[String] $ssl_protocols                           = $nginx::ssl_protocols,
   Optional[String] $ssl_session_cache                       = undef,
   Optional[String] $ssl_session_ticket_key                  = undef,
