@@ -70,10 +70,6 @@ define nginx::resource::geo (
 
   $root_group = $nginx::root_group
   $conf_dir   = "${nginx::conf_dir}/conf.d"
-  $_notify    = $nginx::reload ? {
-    true    => Class['nginx::service'],
-    default => undef,
-  }
 
   $ensure_real = $ensure ? {
     'absent' => 'absent',
@@ -86,7 +82,7 @@ define nginx::resource::geo (
     group   => $root_group,
     mode    => $nginx::global_mode,
     content => template('nginx/conf.d/geo.erb'),
-    notify  => $_notify,
+    notify  => $nginx::reload,
     tag     => 'nginx_config_file',
   }
 }

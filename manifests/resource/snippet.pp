@@ -24,17 +24,13 @@ define nginx::resource::snippet (
 
   $name_sanitized = regsubst($name, ' ', '_', 'G')
   $config_file = "${nginx::snippets_dir}/${name_sanitized}.conf"
-  $_notify     = $nginx::reload ? {
-    true    => Class['nginx::service'],
-    default => undef,
-  }
 
   concat { $config_file:
     ensure  => $ensure,
     owner   => $owner,
     group   => $group,
     mode    => $mode,
-    notify  => $_notify,
+    notify  => $nginx::reload,
     require => File[$nginx::snippets_dir],
     tag     => 'nginx_config_file',
   }

@@ -1585,12 +1585,12 @@ Default value: `true`
 
 ##### <a name="-nginx--reload"></a>`reload`
 
-Data type: `Boolean`
+Data type: `Variant[Type, Undef]`
 
-Whether config changes should trigger a service reload. When set to false,
-configuration changes will not automatically reload nginx.
+Resource to notify when config changes. Set to `undef` to disable
+automatic nginx reloads on configuration changes.
 
-Default value: `true`
+Default value: `Class['nginx::service']`
 
 ##### <a name="-nginx--geo_mappings"></a>`geo_mappings`
 

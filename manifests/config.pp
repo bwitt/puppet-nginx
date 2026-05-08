@@ -7,7 +7,6 @@ class nginx::config {
   $confd_only                     = $nginx::confd_only
   $confd_purge                    = $nginx::confd_purge
   $conf_dir                       = $nginx::conf_dir
-  $reload                         = $nginx::reload
   $daemon                         = $nginx::daemon
   $daemon_user                    = $nginx::daemon_user
   $daemon_group                   = $nginx::daemon_group
@@ -175,21 +174,13 @@ class nginx::config {
       File["${conf_dir}/conf.d"] {
         purge   => true,
         recurse => true,
+        notify  => $nginx::reload,
       }
 
       File["${conf_dir}/conf.stream.d"] {
         purge   => true,
         recurse => true,
-      }
-
-      if $reload {
-        File["${conf_dir}/conf.d"] {
-          notify => Class['nginx::service'],
-        }
-
-        File["${conf_dir}/conf.stream.d"] {
-          notify => Class['nginx::service'],
-        }
+        notify  => $nginx::reload,
       }
     }
   }

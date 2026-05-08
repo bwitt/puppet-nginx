@@ -512,23 +512,12 @@ describe 'nginx::resource::upstream' do
               }
             end
 
-            context 'when reload => true (default)' do
+            context 'when reload is default (Class[nginx::service])' do
               let(:params) { default_params[upstreamcontext.to_sym] }
               let(:conf_d_path) { conf_d_pathes[upstreamcontext.to_sym] }
 
               it {
                 is_expected.to contain_concat("#{conf_d_path}/#{title}-upstream.conf").
-                  that_notifies('Class[nginx::service]')
-              }
-            end
-
-            context 'when reload => false' do
-              let(:pre_condition) { 'class { "nginx": reload => false }' }
-              let(:params) { default_params[upstreamcontext.to_sym] }
-              let(:conf_d_path) { conf_d_pathes[upstreamcontext.to_sym] }
-
-              it {
-                is_expected.not_to contain_concat("#{conf_d_path}/#{title}-upstream.conf").
                   that_notifies('Class[nginx::service]')
               }
             end

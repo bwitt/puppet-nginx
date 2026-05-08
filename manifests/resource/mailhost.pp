@@ -236,10 +236,6 @@ define nginx::resource::mailhost (
 
   $config_dir  = "${nginx::conf_dir}/conf.mail.d"
   $config_file = "${config_dir}/${name}.conf"
-  $_notify     = $nginx::reload ? {
-    true    => Class['nginx::service'],
-    default => undef,
-  }
 
   # Pre-render some common parts
   $mailhost_prepend = epp('nginx/prepend_append.epp',
@@ -302,7 +298,7 @@ define nginx::resource::mailhost (
     owner   => 'root',
     group   => $nginx::root_group,
     mode    => $nginx::global_mode,
-    notify  => $_notify,
+    notify  => $nginx::reload,
     require => File[$config_dir],
     tag     => 'nginx_config_file',
   }

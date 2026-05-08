@@ -85,10 +85,6 @@ define nginx::resource::streamhost (
 
   $name_sanitized = regsubst($name, ' ', '_', 'G')
   $config_file = "${streamhost_dir}/${name_sanitized}.conf"
-  $_notify     = $nginx::reload ? {
-    true    => Class['nginx::service'],
-    default => undef,
-  }
 
   # Add IPv6 Logic Check - Nginx service will not start if ipv6 is enabled
   # and support does not exist for it in the kernel.
@@ -101,7 +97,7 @@ define nginx::resource::streamhost (
     owner   => $owner,
     group   => $group,
     mode    => $mode,
-    notify  => $_notify,
+    notify  => $nginx::reload,
     require => File[$streamhost_dir],
     tag     => 'nginx_config_file',
   }
@@ -121,7 +117,7 @@ define nginx::resource::streamhost (
       group   => $group,
       mode    => $mode,
       require => Concat[$config_file],
-      notify  => $_notify,
+      notify  => $nginx::reload,
     }
   }
 }
