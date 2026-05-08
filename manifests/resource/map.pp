@@ -66,19 +66,19 @@
 define nginx::resource::map (
   String[2] $string,
   Nginx::StringMappings $mappings = [],
-  Optional[String] $default         = undef,
+  Optional[String] $default = undef,
   Enum['absent', 'present'] $ensure = 'present',
-  Array[String] $include_files      = [],
-  Boolean $hostnames                = false,
-  Enum['http', 'stream'] $context   = 'http',
+  Array[String] $include_files = [],
+  Boolean $hostnames = false,
+  Enum['http', 'stream'] $context = 'http',
 ) {
-  if ! defined(Class['nginx']) {
+  if !defined(Class['nginx']) {
     fail('You must include the nginx base class before using any defined resources')
   }
 
   $root_group = $nginx::root_group
 
-  $conf_dir   = $context ? {
+  $conf_dir = $context ? {
     'stream' => "${nginx::conf_dir}/conf.stream.d",
     'http'   => "${nginx::conf_dir}/conf.d",
   }

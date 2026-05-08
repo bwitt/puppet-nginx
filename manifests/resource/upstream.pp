@@ -103,37 +103,37 @@
 #   }
 #
 define nginx::resource::upstream (
-  Enum['present', 'absent']           $ensure                 = 'present',
-  Enum['http', 'stream']              $context                = 'http',
-  Nginx::UpstreamMembers              $members                = {},
-  Optional[String[1]]                 $members_tag            = undef,
-  Nginx::UpstreamMemberDefaults       $member_defaults        = {},
-  Optional[String[1]]                 $hash                   = undef,
-  Boolean                             $ip_hash                = false,
-  Optional[Integer[1]]                $keepalive              = undef,
-  Optional[Integer[1]]                $keepalive_requests     = undef,
-  Optional[Nginx::Time]               $keepalive_timeout      = undef,
-  Boolean                             $least_conn             = false,
-  Optional[Nginx::UpstreamLeastTime]  $least_time             = undef,
-  Boolean                             $ntlm                   = false,
-  Optional[Integer]                   $queue_max              = undef,
-  Optional[Nginx::Time]               $queue_timeout          = undef,
-  Optional[String[1]]                 $random                 = undef,
-  Optional[Stdlib::Unixpath]          $statefile              = undef,
-  Optional[Nginx::UpstreamSticky]     $sticky                 = undef,
-  Optional[Nginx::UpstreamZone]       $zone                   = undef,
-  Nginx::UpstreamCustomParameters     $cfg_append             = {},
-  Nginx::UpstreamCustomParameters     $cfg_prepend            = {},
+  Enum['present', 'absent'] $ensure = 'present',
+  Enum['http', 'stream'] $context = 'http',
+  Nginx::UpstreamMembers $members = {},
+  Optional[String[1]] $members_tag = undef,
+  Nginx::UpstreamMemberDefaults $member_defaults = {},
+  Optional[String[1]] $hash = undef,
+  Boolean $ip_hash = false,
+  Optional[Integer[1]] $keepalive = undef,
+  Optional[Integer[1]] $keepalive_requests = undef,
+  Optional[Nginx::Time] $keepalive_timeout = undef,
+  Boolean $least_conn = false,
+  Optional[Nginx::UpstreamLeastTime] $least_time = undef,
+  Boolean $ntlm = false,
+  Optional[Integer] $queue_max = undef,
+  Optional[Nginx::Time] $queue_timeout = undef,
+  Optional[String[1]] $random = undef,
+  Optional[Stdlib::Unixpath] $statefile = undef,
+  Optional[Nginx::UpstreamSticky] $sticky = undef,
+  Optional[Nginx::UpstreamZone] $zone = undef,
+  Nginx::UpstreamCustomParameters $cfg_append = {},
+  Nginx::UpstreamCustomParameters $cfg_prepend = {},
 ) {
-  if ! defined(Class['nginx']) {
+  if !defined(Class['nginx']) {
     fail('You must include the nginx base class before using any defined resources')
   }
 
   if $least_time {
-    if $context == 'http' and ! ($least_time =~ Nginx::UpstreamLeastTimeHttp) {
+    if $context == 'http' and !($least_time =~ Nginx::UpstreamLeastTimeHttp) {
       fail('The parameter "least_time" does not match the datatype "Nginx::UpstreamLeastTimeHttp"')
     }
-    if $context == 'stream' and ! ($least_time =~ Nginx::UpstreamLeastTimeStream) {
+    if $context == 'stream' and !($least_time =~ Nginx::UpstreamLeastTimeStream) {
       fail('The parameter "least_time" does not match the datatype "Nginx::UpstreamLeastTimeStream"')
     }
   }
@@ -167,8 +167,8 @@ define nginx::resource::upstream (
     ),
   }
 
-  if ! empty($members) {
-    $members.each |$member,$values| {
+  if !empty($members) {
+    $members.each |$member, $values| {
       $member_values = $member_defaults + $values + { 'upstream' => $name, 'context' => $context }
 
       if $context == 'stream' and $member_values['route'] {

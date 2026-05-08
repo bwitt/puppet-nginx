@@ -30,7 +30,9 @@
 # @param ipv6_listen_port
 #   Default IPv6 Port for NGINX to listen with this server on. Defaults to TCP 80
 # @param ipv6_listen_options
-#   Extra options for listen directive like 'default' to catchall.
+#   Extra options for listen directive like 'default' to catchall. Defaults to
+#   'ipv6only=on'. If listen_options is set, those options are inherited with
+#   'ipv6only=on' appended.
 # @param add_header
 #   Adds headers to the HTTP response when response code is equal to 200, 204,
 #   301, 302 or 304.
@@ -46,9 +48,33 @@
 # @param autoindex_localtime
 #   Specifies whether times in the directory listing should be output in the
 #   local time zone or UTC.
+# @param dav_methods
+#   Defines the HTTP methods allowed for WebDAV.
+#   Possible values: 'off' or an array of: 'PUT', 'DELETE', 'MKCOL', 'COPY', 'MOVE'.
+#   Example: ['PUT', 'DELETE', 'MKCOL', 'COPY', 'MOVE']
+# @param dav_access
+#   Sets permissions for newly created files and directories.
+#   Example: 'user:rw group:rw all:r'
+# @param create_full_put_path
+#   Enables creating intermediate directories for PUT requests.
+#   Valid values: 'on' or 'off'
+# @param min_delete_depth
+#   Minimum number of path elements in a request to allow DELETE.
 # @param reset_timedout_connection
 #   Enables or disables resetting timed out connections and connections closed
 #   with the non-standard code 444.
+# @param real_ip_header
+#   Defines the request header field whose value will be used to replace the
+#   client address. See http://nginx.org/en/docs/http/ngx_http_realip_module.html
+# @param real_ip_recursive
+#   If disabled, the original client address that matches one of the trusted
+#   addresses is replaced by the last address sent in the request header field.
+#   If enabled, the original client address that matches one of the trusted
+#   addresses is replaced by the last non-trusted address sent in the request
+#   header field.
+# @param set_real_ip_from
+#   Defines trusted addresses that are known to send correct replacement
+#   addresses.
 # @param proxy
 #   Proxy server(s) for the root location to connect to. Accepts a single
 #   value, can be used in conjunction with nginx::resource::upstream
@@ -67,6 +93,10 @@
 # @param proxy_busy_buffers_size
 #   Sets the total size of buffers that can be busy sending a response to the
 #   client while the response is not yet fully read.
+# @param proxy_next_upstream 
+#   Specify cases a request should be passed to the next server in the upstream.
+# @param grpc
+#   Sets the gRPC server address (`grpc_pass`)
 # @param resolver
 #   Configures name servers used to resolve names of upstream servers into addresses.
 # @param fastcgi
@@ -257,6 +287,11 @@
 #   Equivalent to log_by_lua, except that the file specified by
 #   <path-to-lua-script-file> contains the Lua code, or, as from the v0.5.0rc32
 #   release, the Lua/LuaJIT bytecode to be executed.
+# @param use_default_location
+#   When true, this module creates a default location block for
+#   '/' that sets the root directive. Set to false if you want to define your
+#   own root location, or if you prefer to set 'root' in the server block
+#   rather than in a location block.
 # @param gzip_types
 #   Defines gzip_types, nginx default is text/html
 # @param gzip_static
@@ -288,150 +323,171 @@
 #   }
 #
 define nginx::resource::server (
-  Enum['absent', 'present'] $ensure                                              = 'present',
-  Variant[Array, String] $listen_ip                                              = '*',
-  Stdlib::Port $listen_port                                                      = 80,
-  Optional[String] $listen_options                                               = undef,
-  Boolean $listen_unix_socket_enable                                             = false,
+  Enum['absent', 'present'] $ensure = 'present',
+  Variant[Array, String] $listen_ip = '*',
+  Stdlib::Port $listen_port = 80,
+  Optional[String] $listen_options = undef,
+  Boolean $listen_unix_socket_enable = false,
   Variant[Array[Stdlib::Absolutepath], Stdlib::Absolutepath] $listen_unix_socket = '/var/run/nginx.sock',
-  Optional[String] $listen_unix_socket_options                                   = undef,
-  Optional[Enum['any', 'all']] $location_satisfy                                 = undef,
-  Array $location_allow                                                          = [],
-  Array $location_deny                                                           = [],
-  Boolean $ipv6_enable                                                           = false,
-  Variant[Array, String] $ipv6_listen_ip                                         = '::',
-  Stdlib::Port $ipv6_listen_port                                                 = $listen_port,
-  String $ipv6_listen_options                                                    = 'default ipv6only=on',
-  Hash $add_header                                                               = {},
-  Boolean $ssl                                                                   = false,
-  Boolean $ssl_listen_option                                                     = true,
-  Optional[Variant[String, Boolean, Array[String]]] $ssl_cert                    = undef,
-  Optional[String] $ssl_client_cert                                              = undef,
-  Optional[String] $ssl_verify_client                                            = undef,
-  Optional[String] $ssl_dhparam                                                  = undef,
-  Optional[String] $ssl_ecdh_curve                                               = undef,
-  Boolean $ssl_redirect                                                          = false,
-  Optional[Integer] $ssl_redirect_port                                           = undef,
-  Optional[Variant[String, Boolean, Array[String]]] $ssl_key                     = undef,
-  Integer $ssl_port                                                              = 443,
-  Optional[Enum['on', 'off']] $ssl_prefer_server_ciphers                         = undef,
-  Optional[String] $ssl_protocols                                                = undef,
-  Optional[String] $ssl_buffer_size                                              = undef,
-  Optional[String] $ssl_ciphers                                                  = undef,
-  Optional[String] $ssl_cache                                                    = undef,
-  Optional[String] $ssl_crl                                                      = undef,
-  Boolean $ssl_stapling                                                          = false,
-  Optional[String] $ssl_stapling_file                                            = undef,
-  Optional[String] $ssl_stapling_responder                                       = undef,
-  Boolean $ssl_stapling_verify                                                   = false,
-  Optional[String] $ssl_session_timeout                                          = undef,
-  Optional[Enum['on', 'off']] $ssl_session_tickets                               = undef,
-  Optional[String] $ssl_session_ticket_key                                       = undef,
-  Optional[String] $ssl_trusted_cert                                             = undef,
-  Optional[Integer] $ssl_verify_depth                                            = undef,
-  Optional[Stdlib::Absolutepath] $ssl_password_file                              = undef,
-  Enum['on', 'off'] $spdy                                                        = $nginx::spdy,
-  Enum['on', 'off'] $http2                                                       = $nginx::http2,
-  Optional[String] $proxy                                                        = undef,
-  Optional[Variant[Array[String],String]] $proxy_redirect                        = undef,
-  String $proxy_read_timeout                                                     = $nginx::proxy_read_timeout,
-  String $proxy_send_timeout                                                     = $nginx::proxy_send_timeout,
-  $proxy_connect_timeout                                                         = $nginx::proxy_connect_timeout,
-  Array[String] $proxy_set_header                                                = $nginx::proxy_set_header,
-  Array[String] $proxy_hide_header                                               = $nginx::proxy_hide_header,
-  Array[String] $proxy_pass_header                                               = $nginx::proxy_pass_header,
-  Optional[String] $proxy_cache                                                  = undef,
-  Optional[String] $proxy_cache_key                                              = undef,
-  Optional[String] $proxy_cache_use_stale                                        = undef,
-  Optional[Variant[Array[String], String]] $proxy_cache_valid                    = undef,
-  Optional[Enum['on', 'off']] $proxy_cache_lock                                  = undef,
-  Optional[Enum['on', 'off']] $proxy_cache_background_update                     = undef,
-  Optional[Enum['on', 'off']] $proxy_cache_convert_head                          = undef,
-  Optional[Variant[Array[String], String]] $proxy_cache_bypass                   = undef,
-  Optional[String] $proxy_method                                                 = undef,
-  Optional[String] $proxy_http_version                                           = undef,
-  Optional[String] $proxy_set_body                                               = undef,
-  Optional[String] $proxy_buffering                                              = undef,
-  Optional[String] $proxy_request_buffering                                      = undef,
-  Optional[Nginx::Size] $proxy_max_temp_file_size                                = undef,
-  Optional[Nginx::Size] $proxy_busy_buffers_size                                 = undef,
-  Array $resolver                                                                = [],
-  Optional[String] $fastcgi                                                      = undef,
-  Optional[String] $fastcgi_index                                                = undef,
-  $fastcgi_param                                                                 = undef,
-  String $fastcgi_params                                                         = "${nginx::conf_dir}/fastcgi.conf",
-  Optional[String] $fastcgi_script                                               = undef,
-  Optional[String] $uwsgi                                                        = undef,
-  Optional[Hash] $uwsgi_param                                                    = undef,
-  String $uwsgi_params                                                           = "${nginx::config::conf_dir}/uwsgi_params",
-  Optional[String] $uwsgi_read_timeout                                           = undef,
-  Array $index_files                                                             = [
+  Optional[String] $listen_unix_socket_options = undef,
+  Optional[Enum['any', 'all']] $location_satisfy = undef,
+  Array $location_allow = [],
+  Array $location_deny = [],
+  Boolean $ipv6_enable = false,
+  Variant[Array, String] $ipv6_listen_ip = '::',
+  Stdlib::Port $ipv6_listen_port = $listen_port,
+  Optional[String[1]] $ipv6_listen_options = undef,
+  Hash $add_header = {},
+  Boolean $ssl = false,
+  Boolean $ssl_listen_option = true,
+  Optional[Variant[String, Boolean, Array[String]]] $ssl_cert = undef,
+  Optional[String] $ssl_client_cert = undef,
+  Optional[String] $ssl_verify_client = undef,
+  Optional[String] $ssl_dhparam = undef,
+  Optional[String] $ssl_ecdh_curve = undef,
+  Boolean $ssl_redirect = false,
+  Optional[Integer] $ssl_redirect_port = undef,
+  Optional[Variant[String, Boolean, Array[String]]] $ssl_key = undef,
+  Integer $ssl_port = 443,
+  Optional[Enum['on', 'off']] $ssl_prefer_server_ciphers = undef,
+  Optional[String] $ssl_protocols = undef,
+  Optional[String] $ssl_buffer_size = undef,
+  Optional[String] $ssl_ciphers = undef,
+  Optional[String] $ssl_cache = undef,
+  Optional[String] $ssl_crl = undef,
+  Boolean $ssl_stapling = false,
+  Optional[String] $ssl_stapling_file = undef,
+  Optional[String] $ssl_stapling_responder = undef,
+  Boolean $ssl_stapling_verify = false,
+  Optional[String] $ssl_session_timeout = undef,
+  Optional[Enum['on', 'off']] $ssl_session_tickets = undef,
+  Optional[String] $ssl_session_ticket_key = undef,
+  Optional[String] $ssl_trusted_cert = undef,
+  Optional[Integer] $ssl_verify_depth = undef,
+  Optional[Stdlib::Absolutepath] $ssl_password_file = undef,
+  Enum['on', 'off'] $spdy = $nginx::spdy,
+  Enum['on', 'off'] $http2 = $nginx::http2,
+  Optional[String] $proxy = undef,
+  Optional[Variant[Array[String], String]] $proxy_redirect = undef,
+  Optional[Nginx::Time] $proxy_read_timeout = $nginx::proxy_read_timeout,
+  Optional[Nginx::Time] $proxy_send_timeout = $nginx::proxy_send_timeout,
+  Optional[Nginx::Time] $proxy_connect_timeout = $nginx::proxy_connect_timeout,
+  Array[String] $proxy_set_header = $nginx::proxy_set_header,
+  Array[String] $proxy_hide_header = $nginx::proxy_hide_header,
+  Array[String] $proxy_pass_header = $nginx::proxy_pass_header,
+  Optional[String[1]] $proxy_next_upstream = undef,
+  Optional[String] $proxy_cache = undef,
+  Optional[String] $proxy_cache_key = undef,
+  Optional[String] $proxy_cache_use_stale = undef,
+  Optional[Variant[Array[String], String, Hash[String[1], String[1]]]] $proxy_cache_valid = undef,
+  Optional[Enum['on', 'off']] $proxy_cache_lock = undef,
+  Optional[Enum['on', 'off']] $proxy_cache_background_update = undef,
+  Optional[Enum['on', 'off']] $proxy_cache_convert_head = undef,
+  Optional[Variant[Array[String], String]] $proxy_cache_bypass = undef,
+  Optional[String] $proxy_method = undef,
+  Optional[String] $proxy_http_version = undef,
+  Optional[String] $proxy_set_body = undef,
+  Optional[String] $proxy_buffering = undef,
+  Optional[String] $proxy_request_buffering = undef,
+  Optional[Nginx::Size] $proxy_max_temp_file_size = undef,
+  Optional[Nginx::Size] $proxy_busy_buffers_size = undef,
+  Optional[String] $grpc = undef,
+  Array $resolver = [],
+  Optional[String] $fastcgi = undef,
+  Optional[String] $fastcgi_index = undef,
+  $fastcgi_param = undef,
+  String $fastcgi_params = "${nginx::conf_dir}/fastcgi.conf",
+  Optional[String] $fastcgi_script = undef,
+  Optional[String] $uwsgi = undef,
+  Optional[Hash] $uwsgi_param = undef,
+  String $uwsgi_params = "${nginx::config::conf_dir}/uwsgi_params",
+  Optional[String] $uwsgi_read_timeout = undef,
+  Array $index_files = [
     'index.html',
     'index.htm',
     'index.php',
   ],
-  Optional[String] $autoindex                                                    = undef,
-  Optional[Enum['on', 'off']] $autoindex_exact_size                              = undef,
-  Optional[Enum['html', 'xml', 'json', 'jsonp']] $autoindex_format               = undef,
-  Optional[Enum['on', 'off']] $autoindex_localtime                               = undef,
-  Optional[Enum['on', 'off']] $reset_timedout_connection                         = undef,
-  Array[String] $server_name                                                     = [$name],
-  Optional[String] $www_root                                                     = undef,
-  Boolean $rewrite_www_to_non_www                                                = false,
-  Boolean $rewrite_non_www_to_www                                                = false,
-  Optional[Hash] $location_custom_cfg                                            = undef,
-  Optional[Hash] $location_cfg_prepend                                           = undef,
-  Optional[Hash] $location_cfg_append                                            = undef,
-  Optional[Hash] $location_custom_cfg_prepend                                    = undef,
-  Optional[Hash] $location_custom_cfg_append                                     = undef,
-  Optional[Array[String]] $try_files                                             = undef,
-  Optional[Enum['on', 'off']] $absolute_redirect                                 = undef,
-  Optional[String] $auth_basic                                                   = undef,
-  Optional[String] $auth_basic_user_file                                         = undef,
-  Optional[String] $auth_request                                                 = undef,
-  Optional[String] $client_body_timeout                                          = undef,
-  Optional[String] $client_header_timeout                                        = undef,
-  $client_max_body_size                                                          = undef,
-  Optional[Variant[Array[String], String]] $raw_prepend                          = undef,
-  Optional[Variant[Array[String], String]] $raw_append                           = undef,
-  Optional[Variant[Array[String], String]] $location_raw_prepend                 = undef,
-  Optional[Variant[Array[String], String]] $location_raw_append                  = undef,
-  Optional[Hash] $server_cfg_prepend                                             = undef,
-  Optional[Hash] $server_cfg_append                                              = undef,
-  Optional[Hash] $server_cfg_ssl_prepend                                         = undef,
-  Optional[Hash] $server_cfg_ssl_append                                          = undef,
-  Optional[Array[String]] $include_files                                         = undef,
-  Optional[Variant[String, Array]] $access_log                                   = undef,
-  Optional[Variant[String, Array]] $error_log                                    = undef,
-  Optional[Nginx::ErrorLogSeverity] $error_log_severity                          = undef,
-  Optional[String] $format_log                                                   = $nginx::http_format_log,
-  Optional[Hash] $passenger_cgi_param                                            = undef,
-  Optional[Hash] $passenger_set_header                                           = undef,
-  Optional[Hash] $passenger_env_var                                              = undef,
-  Optional[Variant[Array[String], String]] $passenger_pre_start                  = undef,
-  Optional[String] $log_by_lua                                                   = undef,
-  Optional[String] $log_by_lua_file                                              = undef,
-  $use_default_location                                                          = true,
-  $rewrite_rules                                                                 = [],
-  $string_mappings                                                               = {},
-  $geo_mappings                                                                  = {},
-  Optional[String] $gzip_types                                                   = undef,
-  Optional[String] $gzip_static                                                  = undef,
-  String $owner                                                                  = $nginx::global_owner,
-  String $group                                                                  = $nginx::global_group,
-  String $mode                                                                   = $nginx::global_mode,
-  Boolean $maintenance                                                           = false,
-  String $maintenance_value                                                      = 'return 503',
-  $error_pages                                                                   = undef,
-  Hash $locations                                                                = {},
-  Hash $locations_defaults                                                       = {},
+  Optional[String] $autoindex = undef,
+  Optional[Enum['on', 'off']] $autoindex_exact_size = undef,
+  Optional[Enum['html', 'xml', 'json', 'jsonp']] $autoindex_format = undef,
+  Optional[Enum['on', 'off']] $autoindex_localtime = undef,
+  Optional[Variant[Enum['off'], Array[Enum['PUT', 'DELETE', 'MKCOL', 'COPY', 'MOVE'], 1]]] $dav_methods = undef,
+  Optional[String[1]] $dav_access = undef,
+  Optional[Enum['on', 'off']] $create_full_put_path = undef,
+  Optional[Integer[0]] $min_delete_depth = undef,
+  Optional[Enum['on', 'off']] $reset_timedout_connection = undef,
+  Optional[String[1]] $real_ip_header = undef,
+  Optional[Enum['on', 'off']] $real_ip_recursive = undef,
+  Optional[Variant[String[1], Array[String[1]]]] $set_real_ip_from = undef,
+  Array[String] $server_name = [$name],
+  Optional[String] $www_root = undef,
+  Boolean $rewrite_www_to_non_www = false,
+  Boolean $rewrite_non_www_to_www = false,
+  Optional[Hash] $location_custom_cfg = undef,
+  Optional[Hash] $location_cfg_prepend = undef,
+  Optional[Hash] $location_cfg_append = undef,
+  Optional[Hash] $location_custom_cfg_prepend = undef,
+  Optional[Hash] $location_custom_cfg_append = undef,
+  Optional[Array[String]] $try_files = undef,
+  Optional[Enum['on', 'off']] $absolute_redirect = undef,
+  Optional[String] $auth_basic = undef,
+  Optional[String] $auth_basic_user_file = undef,
+  Optional[String] $auth_request = undef,
+  Optional[String] $client_body_timeout = undef,
+  Optional[String] $client_header_timeout = undef,
+  $client_max_body_size = undef,
+  Optional[Variant[Array[String], String]] $raw_prepend = undef,
+  Optional[Variant[Array[String], String]] $raw_append = undef,
+  Optional[Variant[Array[String], String]] $location_raw_prepend = undef,
+  Optional[Variant[Array[String], String]] $location_raw_append = undef,
+  Optional[Hash] $server_cfg_prepend = undef,
+  Optional[Hash] $server_cfg_append = undef,
+  Optional[Hash] $server_cfg_ssl_prepend = undef,
+  Optional[Hash] $server_cfg_ssl_append = undef,
+  Optional[Array[String]] $include_files = undef,
+  Optional[Variant[String, Array]] $access_log = undef,
+  Optional[Variant[String, Array]] $error_log = undef,
+  Optional[Nginx::ErrorLogSeverity] $error_log_severity = undef,
+  Optional[String] $format_log = $nginx::http_format_log,
+  Optional[Hash] $passenger_cgi_param = undef,
+  Optional[Hash] $passenger_set_header = undef,
+  Optional[Hash] $passenger_env_var = undef,
+  Optional[Variant[Array[String], String]] $passenger_pre_start = undef,
+  Optional[String] $log_by_lua = undef,
+  Optional[String] $log_by_lua_file = undef,
+  Boolean $use_default_location = true,
+  $rewrite_rules = [],
+  $string_mappings = {},
+  $geo_mappings = {},
+  Optional[String] $gzip_types = undef,
+  Optional[String] $gzip_static = undef,
+  String $owner = $nginx::global_owner,
+  String $group = $nginx::global_group,
+  String $mode = $nginx::global_mode,
+  Boolean $maintenance = false,
+  String $maintenance_value = 'return 503',
+  $error_pages = undef,
+  Hash $locations = {},
+  Hash $locations_defaults = {},
 ) {
-  if ! defined(Class['nginx']) {
+  if !defined(Class['nginx']) {
     fail('You must include the nginx base class before using any defined resources')
   }
 
   if $rewrite_www_to_non_www == true and $rewrite_non_www_to_www == true {
     fail('You must not set both $rewrite_www_to_non_www and $rewrite_non_www_to_www to true')
+  }
+
+  # Compute effective ipv6_listen_options:
+  # - Use ipv6_listen_options if set
+  # - Otherwise use listen_options with ipv6only=on appended
+  # - Otherwise use 'ipv6only=on'
+  $_ipv6_listen_options = $ipv6_listen_options ? {
+    undef   => $listen_options ? {
+      undef   => 'ipv6only=on',
+      default => "${listen_options} ipv6only=on",
+    },
+    default => $ipv6_listen_options,
   }
 
   # Variables
@@ -542,6 +598,8 @@ define nginx::resource::server (
       proxy_request_buffering       => $proxy_request_buffering,
       proxy_busy_buffers_size       => $proxy_busy_buffers_size,
       proxy_max_temp_file_size      => $proxy_max_temp_file_size,
+      proxy_next_upstream           => $proxy_next_upstream,
+      grpc                          => $grpc,
       fastcgi                       => $fastcgi,
       fastcgi_index                 => $fastcgi_index,
       fastcgi_param                 => $fastcgi_param,
@@ -557,6 +615,10 @@ define nginx::resource::server (
       autoindex_exact_size          => $autoindex_exact_size,
       autoindex_format              => $autoindex_format,
       autoindex_localtime           => $autoindex_localtime,
+      dav_methods                   => $dav_methods,
+      dav_access                    => $dav_access,
+      create_full_put_path          => $create_full_put_path,
+      min_delete_depth              => $min_delete_depth,
       index_files                   => $index_files,
       location_custom_cfg           => $location_custom_cfg,
       location_cfg_prepend          => $location_cfg_prepend,

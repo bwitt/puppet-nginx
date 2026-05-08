@@ -17,7 +17,9 @@
 # @param ipv6_listen_port
 #   Default IPv6 Port for NGINX to listen with this server on.
 # @param ipv6_listen_options
-#   Extra options for listen directive like 'default' to catchall.
+#   Extra options for listen directive like 'default' to catchall. Defaults to
+#   'ipv6only=on'. If listen_options is set, those options are inherited with
+#   'ipv6only=on' appended.
 # @param ssl
 #   Indicates whether to setup SSL bindings for this mailhost.
 # @param ssl_cert
@@ -131,69 +133,69 @@
 #
 define nginx::resource::mailhost (
   Stdlib::Port $listen_port,
-  Enum['absent', 'present'] $ensure              = 'present',
-  Variant[Array[String], String] $listen_ip      = '*',
-  Optional[String] $listen_options               = undef,
-  Boolean $ipv6_enable                           = false,
+  Enum['absent', 'present'] $ensure = 'present',
+  Variant[Array[String], String] $listen_ip = '*',
+  Optional[String] $listen_options = undef,
+  Boolean $ipv6_enable = false,
   Variant[Array[String], String] $ipv6_listen_ip = '::',
-  Stdlib::Port $ipv6_listen_port                 = $listen_port,
-  String $ipv6_listen_options                    = 'default ipv6only=on',
-  Boolean $ssl                                   = false,
-  Optional[String] $ssl_cert                     = undef,
-  String $ssl_ciphers                            = $nginx::ssl_ciphers,
-  Optional[String] $ssl_client_cert              = undef,
-  Optional[String] $ssl_crl                      = undef,
-  Optional[String] $ssl_dhparam                  = $nginx::ssl_dhparam,
-  Optional[String] $ssl_ecdh_curve               = undef,
-  Optional[String] $ssl_key                      = undef,
-  Optional[String] $ssl_password_file            = undef,
-  Optional[Stdlib::Port] $ssl_port               = undef,
-  Enum['on', 'off'] $ssl_prefer_server_ciphers   = $nginx::ssl_prefer_server_ciphers,
-  String $ssl_protocols                          = $nginx::ssl_protocols,
-  Optional[String] $ssl_session_cache            = undef,
-  Optional[String] $ssl_session_ticket_key       = undef,
-  Optional[String] $ssl_session_tickets          = undef,
-  String $ssl_session_timeout                    = '5m',
-  Optional[String] $ssl_trusted_cert             = undef,
-  Optional[Integer] $ssl_verify_depth            = undef,
-  Enum['on', 'off', 'only'] $starttls            = 'off',
+  Stdlib::Port $ipv6_listen_port = $listen_port,
+  Optional[String[1]] $ipv6_listen_options = undef,
+  Boolean $ssl = false,
+  Optional[String] $ssl_cert = undef,
+  Optional[String] $ssl_ciphers = $nginx::ssl_ciphers,
+  Optional[String] $ssl_client_cert = undef,
+  Optional[String] $ssl_crl = undef,
+  Optional[String] $ssl_dhparam = $nginx::ssl_dhparam,
+  Optional[String] $ssl_ecdh_curve = undef,
+  Optional[String] $ssl_key = undef,
+  Optional[String] $ssl_password_file = undef,
+  Optional[Stdlib::Port] $ssl_port = undef,
+  Enum['on', 'off'] $ssl_prefer_server_ciphers = $nginx::ssl_prefer_server_ciphers,
+  Optional[String] $ssl_protocols = $nginx::ssl_protocols,
+  Optional[String] $ssl_session_cache = undef,
+  Optional[String] $ssl_session_ticket_key = undef,
+  Optional[String] $ssl_session_tickets = undef,
+  String $ssl_session_timeout = '5m',
+  Optional[String] $ssl_trusted_cert = undef,
+  Optional[Integer] $ssl_verify_depth = undef,
+  Enum['on', 'off', 'only'] $starttls = 'off',
   Optional[Enum['imap', 'pop3', 'sieve', 'smtp']] $protocol = undef,
-  Optional[String] $auth_http                    = undef,
-  Optional[String] $auth_http_header             = undef,
-  Enum['on', 'off'] $xclient                     = 'on',
-  Enum['on', 'off'] $proxy_protocol              = 'off',
-  Enum['on', 'off'] $proxy_smtp_auth             = 'off',
-  Optional[String] $imap_auth                    = undef,
-  Optional[Array] $imap_capabilities             = undef,
-  Optional[String] $imap_client_buffer           = undef,
-  Optional[String] $pop3_auth                    = undef,
-  Optional[Array] $pop3_capabilities             = undef,
-  Optional[String] $smtp_auth                    = undef,
-  Optional[Array] $smtp_capabilities             = undef,
-  String $proxy_pass_error_message               = 'off',
-  Array $server_name                             = [$name],
-  Variant[Array[String], String] $raw_prepend    = [],
-  Variant[Array[String], String] $raw_append     = [],
+  Optional[String] $auth_http = undef,
+  Optional[String] $auth_http_header = undef,
+  Enum['on', 'off'] $xclient = 'on',
+  Enum['on', 'off'] $proxy_protocol = 'off',
+  Enum['on', 'off'] $proxy_smtp_auth = 'off',
+  Optional[String] $imap_auth = undef,
+  Optional[Array] $imap_capabilities = undef,
+  Optional[String] $imap_client_buffer = undef,
+  Optional[String] $pop3_auth = undef,
+  Optional[Array] $pop3_capabilities = undef,
+  Optional[String] $smtp_auth = undef,
+  Optional[Array] $smtp_capabilities = undef,
+  String $proxy_pass_error_message = 'off',
+  Array $server_name = [$name],
+  Variant[Array[String], String] $raw_prepend = [],
+  Variant[Array[String], String] $raw_append = [],
   Hash[String,
     Variant[
       String,
       Array[String],
       Hash[String, Variant[String, Array[String]]],
     ]
-  ] $mailhost_cfg_prepend                        = {},
+  ] $mailhost_cfg_prepend = {},
   Hash[String,
     Variant[
       String,
       Array[String],
       Hash[String, Variant[String, Array[String]]],
     ]
-  ] $mailhost_cfg_append                         = {},
+  ] $mailhost_cfg_append = {},
 ) {
-  if ! defined(Class['nginx']) {
+  if !defined(Class['nginx']) {
     fail('You must include the nginx base class before using any defined resources')
   } elsif versioncmp($facts.get('nginx_version', $nginx::nginx_version), '1.15.0') < 0 {
     fail('The mail module requires nginx 1.15 or newer')
-  } elsif ! $nginx::mail {
+  } elsif !$nginx::mail {
     fail('nginx mail proxy requires the nginx::mail flag to be set true')
   }
 
@@ -221,6 +223,18 @@ define nginx::resource::mailhost (
     warning('nginx: IPv6 support is not enabled or configured properly')
   }
 
+  # Compute effective ipv6_listen_options:
+  # - Use ipv6_listen_options if set
+  # - Otherwise use listen_options with ipv6only=on appended
+  # - Otherwise use 'ipv6only=on'
+  $_ipv6_listen_options = $ipv6_listen_options ? {
+    undef   => $listen_options ? {
+      undef   => 'ipv6only=on',
+      default => "${listen_options} ipv6only=on",
+    },
+    default => $ipv6_listen_options,
+  }
+
   if $ipv6_enable and $has_ipaddress6 {
     $_ipv6_listen_ip = Array($ipv6_listen_ip, true)
   } else {
@@ -234,7 +248,7 @@ define nginx::resource::mailhost (
     }
   }
 
-  $config_dir  = "${nginx::conf_dir}/conf.mail.d"
+  $config_dir = "${nginx::conf_dir}/conf.mail.d"
   $config_file = "${config_dir}/${name}.conf"
 
   # Pre-render some common parts
@@ -310,7 +324,7 @@ define nginx::resource::mailhost (
       content => epp('nginx/mailhost/mailhost.epp',
         {
           ipv6_listen_ip        => $_ipv6_listen_ip,
-          ipv6_listen_options   => $ipv6_listen_options,
+          ipv6_listen_options   => $_ipv6_listen_options,
           ipv6_listen_port      => $ipv6_listen_port,
           listen_ip             => Array($listen_ip, true),
           listen_options        => $listen_options,
@@ -334,7 +348,7 @@ define nginx::resource::mailhost (
       content => epp('nginx/mailhost/mailhost_ssl.epp',
         {
           ipv6_listen_ip        => $_ipv6_listen_ip,
-          ipv6_listen_options   => $ipv6_listen_options,
+          ipv6_listen_options   => $_ipv6_listen_options,
           ipv6_listen_port      => $ipv6_listen_port,
           listen_ip             => Array($listen_ip, true),
           listen_options        => $listen_options,

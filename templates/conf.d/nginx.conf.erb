@@ -13,7 +13,9 @@ daemon <%= @daemon %>;
 <% if @super_user -%>
 user <%= @daemon_user %><% if @daemon_group -%> <%= @daemon_group %><% end -%>;
 <% end -%>
+<% if @worker_processes -%>
 worker_processes <%= @worker_processes %>;
+<% end -%>
 <% if @worker_rlimit_nofile -%>
 worker_rlimit_nofile <%= @worker_rlimit_nofile %>;
 <% end -%>
@@ -38,11 +40,15 @@ include /etc/nginx/modules-enabled/*.conf;
 <% end -%>
 
 events {
+  <%- if @accept_mutex -%>
   accept_mutex <%= @accept_mutex %>;
+  <%- end -%>
   <%- if @accept_mutex_delay -%>
   accept_mutex_delay <%= @accept_mutex_delay %>;
   <%- end -%>
+  <%- if @worker_connections -%>
   worker_connections <%= @worker_connections -%>;
+  <%- end -%>
   <%- if @multi_accept == 'on' -%>
   multi_accept on;
   <%- end -%>
@@ -113,17 +119,27 @@ http {
 
 <% if @sendfile == 'on' -%>
   sendfile on;
-  <%- if @http_tcp_nopush == 'on' -%>
-  tcp_nopush on;
-  <%- end -%>
 <% end -%>
+<% if @http_tcp_nopush == 'on' -%>
+  tcp_nopush on;
+<% end -%>
+<% if @server_tokens -%>
   server_tokens <%= @server_tokens %>;
+<% end -%>
 
+<% if @types_hash_max_size -%>
   types_hash_max_size <%= @types_hash_max_size %>;
+<% end -%>
+<% if @types_hash_bucket_size -%>
   types_hash_bucket_size <%= @types_hash_bucket_size %>;
+<% end -%>
 
+<% if @names_hash_bucket_size -%>
   server_names_hash_bucket_size <%= @names_hash_bucket_size %>;
+<% end -%>
+<% if @names_hash_max_size -%>
   server_names_hash_max_size <%= @names_hash_max_size %>;
+<% end -%>
 
 <% if @map_hash_bucket_size -%>
   map_hash_bucket_size <%= @map_hash_bucket_size %>;
@@ -139,18 +155,30 @@ http {
   variables_hash_max_size <%= @variables_hash_max_size %>;
 <% end -%>
 
+<% if @keepalive_timeout -%>
   keepalive_timeout   <%= @keepalive_timeout %>;
+<% end -%>
+<% if @keepalive_requests -%>
   keepalive_requests  <%= @keepalive_requests %>;
+<% end -%>
+<% if @client_body_timeout -%>
   client_body_timeout <%= @client_body_timeout %>;
+<% end -%>
+<% if @send_timeout -%>
   send_timeout        <%= @send_timeout %>;
+<% end -%>
 <% if @lingering_close -%>
   lingering_close      <%= @lingering_close %>;
 <% end -%>
 <% if @lingering_time -%>
   lingering_time      <%= @lingering_time %>;
 <% end -%>
+<% if @lingering_timeout -%>
   lingering_timeout   <%= @lingering_timeout %>;
+<% end -%>
+<% if @http_tcp_nodelay -%>
   tcp_nodelay         <%= @http_tcp_nodelay %>;
+<% end -%>
 <% if @reset_timedout_connection -%>
   reset_timedout_connection <%= @reset_timedout_connection %>;
 <% end -%>
@@ -160,26 +188,34 @@ http {
 
 <% end -%>
 <% if @gzip_static -%>
-   gzip_static       <%= @gzip_static %>;
+  gzip_static       <%= @gzip_static %>;
 <% end -%>
 <% if @gzip == 'on' -%>
   gzip              on;
 <% if @gzip_buffers -%>
   gzip_buffers      <%= @gzip_buffers %>;
 <% end -%>
+<% if @gzip_comp_level -%>
   gzip_comp_level   <%= @gzip_comp_level %>;
+<% end -%>
 <% if @gzip_disable -%>
   gzip_disable      <%= @gzip_disable %>;
 <% end -%>
+<% if @gzip_min_length -%>
   gzip_min_length   <%= @gzip_min_length %>;
+<% end -%>
+<% if @gzip_http_version -%>
   gzip_http_version <%= @gzip_http_version %>;
+<% end -%>
 <% if @gzip_proxied -%>
   gzip_proxied      <%= Array(@gzip_proxied).uniq.join(' ') %>;
 <% end -%>
 <% if @gzip_types -%>
   gzip_types        <%= @gzip_types.kind_of?(Array) ? @gzip_types.join(' ') : @gzip_types %>;
 <% end -%>
+<% if @gzip_vary -%>
   gzip_vary         <%= @gzip_vary %>;
+<% end -%>
 <% end -%>
 
 <% if @_client_body_temp_path -%>
@@ -251,14 +287,30 @@ http {
   <%- if @proxy_cache_loader_sleep %> loader_sleep=<%= @proxy_cache_loader_sleep %><% end -%>
   <%- if @proxy_cache_loader_threshold %> loader_threshold=<%= @proxy_cache_loader_threshold %><% end -%>;
 <% end -%>
-<% if @fastcgi_cache_path -%>
-  fastcgi_cache_path    	<%= @fastcgi_cache_path %> levels=<%= @fastcgi_cache_levels %> keys_zone=<%= @fastcgi_cache_keys_zone %> max_size=<%= @fastcgi_cache_max_size %> inactive=<%= @fastcgi_cache_inactive %>;
+<% if @fastcgi_cache_path.is_a?(Hash) -%>
+<% @fastcgi_cache_path.sort_by{|k,v| k}.each do |key,value| -%>
+  fastcgi_cache_path      <%= key %> levels=<%= @fastcgi_cache_levels %> keys_zone=<%= value %> max_size=<%= @fastcgi_cache_max_size %> inactive=<%= @fastcgi_cache_inactive %>;
+<% end -%>
+<% elsif @fastcgi_cache_path -%>
+  fastcgi_cache_path      <%= @fastcgi_cache_path %> levels=<%= @fastcgi_cache_levels %> keys_zone=<%= @fastcgi_cache_keys_zone %> max_size=<%= @fastcgi_cache_max_size %> inactive=<%= @fastcgi_cache_inactive %>;
 <% end -%>
 <% if @fastcgi_cache_key -%>
   fastcgi_cache_key		    <%= @fastcgi_cache_key %>;
 <% end -%>
 <% if @fastcgi_cache_use_stale -%>
   fastcgi_cache_use_stale <%= @fastcgi_cache_use_stale %>;
+<% end -%>
+
+<% if @set_real_ip_from -%>
+  <%- Array(@set_real_ip_from).each do |addr| -%>
+  set_real_ip_from        <%= addr %>;
+  <%- end -%>
+<% end -%>
+<% if @real_ip_header -%>
+  real_ip_header          <%= @real_ip_header %>;
+<% end -%>
+<% if @real_ip_recursive -%>
+  real_ip_recursive       <%= @real_ip_recursive %>;
 <% end -%>
 
 <% if @ssl_dhparam -%>

@@ -19,7 +19,7 @@ describe 'nginx' do
           mail: true,
           nginx_mailhosts: { 'smtp.test2.local' => { 'auth_http' => 'server2.example/cgi-bin/auth', 'protocol' => 'smtp', 'listen_port' => 587 } },
           nginx_mailhosts_defaults: { 'listen_options' => 'default_server_smtp' },
-          nginx_streamhosts: { 'streamhost1' => { 'proxy' => 'streamproxy' } }
+          nginx_streamhosts: { 'streamhost1' => { 'proxy' => 'streamproxy' } },
         }
       end
 
@@ -54,13 +54,13 @@ describe 'nginx' do
                 'enabled'  => '1',
                 'gpgcheck' => '1',
                 'priority' => '1',
-                'gpgkey'   => 'https://nginx.org/keys/nginx_signing.key'
+                'gpgkey'   => 'https://nginx.org/keys/nginx_signing.key',
               )
             end
 
             it do
               is_expected.to contain_yumrepo('passenger').with(
-                'ensure' => 'absent'
+                'ensure' => 'absent',
               )
             end
 
@@ -80,7 +80,7 @@ describe 'nginx' do
                 'enabled'  => '1',
                 'gpgcheck' => '1',
                 'priority' => '1',
-                'gpgkey'   => 'https://nginx.org/keys/nginx_signing.key'
+                'gpgkey'   => 'https://nginx.org/keys/nginx_signing.key',
               )
             end
 
@@ -92,13 +92,13 @@ describe 'nginx' do
 
             it do
               is_expected.to contain_yumrepo('nginx-release').with(
-                'baseurl' => "https://nginx.org/packages/mainline/#{%w[CentOS VirtuozzoLinux OracleLinux].include?(facts[:os]['name']) ? 'centos' : 'rhel'}/#{facts[:os]['release']['major']}/$basearch/"
+                'baseurl' => "https://nginx.org/packages/mainline/#{%w[CentOS VirtuozzoLinux OracleLinux].include?(facts[:os]['name']) ? 'centos' : 'rhel'}/#{facts[:os]['release']['major']}/$basearch/",
               )
             end
 
             it do
               is_expected.to contain_yumrepo('passenger').with(
-                'ensure' => 'absent'
+                'ensure' => 'absent',
               )
             end
 
@@ -114,13 +114,13 @@ describe 'nginx' do
                 'baseurl'       => "https://oss-binaries.phusionpassenger.com/yum/passenger/el/#{facts[:os]['release']['major']}/$basearch",
                 'gpgcheck'      => '0',
                 'repo_gpgcheck' => '1',
-                'gpgkey'        => 'https://oss-binaries.phusionpassenger.com/auto-software-signing-gpg-key.txt'
+                'gpgkey'        => 'https://oss-binaries.phusionpassenger.com/auto-software-signing-gpg-key-2025.txt',
               )
             end
 
             it do
               is_expected.to contain_yumrepo('nginx-release').with(
-                'ensure' => 'absent'
+                'ensure' => 'absent',
               )
             end
 
@@ -163,8 +163,8 @@ describe 'nginx' do
                 'repos'    => 'nginx',
                 'key'      => {
                   'source' => 'https://nginx.org/keys/nginx_signing.key',
-                  'name' => 'nginx.asc'
-                }
+                  'name' => 'nginx.asc',
+                },
               )
             end
           end
@@ -174,7 +174,7 @@ describe 'nginx' do
 
             it do
               is_expected.to contain_apt__source('nginx').with(
-                'location' => 'https://example.com/nginx'
+                'location' => 'https://example.com/nginx',
               )
             end
           end
@@ -184,7 +184,7 @@ describe 'nginx' do
 
             it do
               is_expected.to contain_apt__source('nginx').with(
-                'location' => "https://nginx.org/packages/mainline/#{facts[:os]['name'].downcase}"
+                'location' => "https://nginx.org/packages/mainline/#{facts[:os]['name'].downcase}",
               )
             end
           end
@@ -200,9 +200,9 @@ describe 'nginx' do
                 'location' => 'https://oss-binaries.phusionpassenger.com/apt/passenger',
                 'repos'    => 'main',
                 'key'      => {
-                  'source' => 'https://oss-binaries.phusionpassenger.com/auto-software-signing-gpg-key.txt',
-                  'name' => 'phusionpassenger.asc'
-                }
+                  'source' => 'https://oss-binaries.phusionpassenger.com/auto-software-signing-gpg-key-2025.txt',
+                  'name' => 'phusionpassenger.asc',
+                },
               )
             end
           end
@@ -229,7 +229,7 @@ describe 'nginx' do
             service_ensure: 'running',
             service_enable: true,
             service_name: 'nginx',
-            service_manage: true
+            service_manage: true,
           }
         end
 
@@ -237,7 +237,7 @@ describe 'nginx' do
           it do
             is_expected.to contain_service('nginx').with(
               ensure: 'running',
-              enable: true
+              enable: true,
             )
           end
 
@@ -250,7 +250,7 @@ describe 'nginx' do
               service_restart: 'a restart command',
               service_ensure: 'running',
               service_enable: true,
-              service_name: 'nginx'
+              service_name: 'nginx',
             }
           end
 
@@ -260,7 +260,7 @@ describe 'nginx' do
         describe "when service_name => 'nginx14" do
           let :params do
             {
-              service_name: 'nginx14'
+              service_name: 'nginx14',
             }
           end
 
@@ -270,7 +270,7 @@ describe 'nginx' do
         describe 'when service_manage => false' do
           let :params do
             {
-              service_manage: false
+              service_manage: false,
             }
           end
 
@@ -303,7 +303,7 @@ describe 'nginx' do
               ensure: 'directory',
               owner: 'root',
               group: 'root',
-              mode: '0644'
+              mode: '0644',
             )
           end
 
@@ -313,7 +313,7 @@ describe 'nginx' do
               ensure: 'directory',
               owner: 'root',
               group: 'root',
-              mode: '0644'
+              mode: '0644',
             )
           end
 
@@ -323,7 +323,7 @@ describe 'nginx' do
               ensure: 'directory',
               owner: 'root',
               group: 'root',
-              mode: '0644'
+              mode: '0644',
             )
           end
 
@@ -333,7 +333,7 @@ describe 'nginx' do
               ensure: 'directory',
               owner: 'root',
               group: 'root',
-              mode: '0644'
+              mode: '0644',
             )
           end
 
@@ -342,7 +342,7 @@ describe 'nginx' do
               ensure: 'file',
               owner: 'root',
               group: 'root',
-              mode: '0644'
+              mode: '0644',
             )
           end
 
@@ -351,7 +351,7 @@ describe 'nginx' do
               ensure: 'file',
               owner: 'root',
               group: 'root',
-              mode: '0644'
+              mode: '0644',
             )
           end
 
@@ -359,7 +359,7 @@ describe 'nginx' do
             is_expected.to contain_file('/tmp/nginx.d').with(
               ensure: 'absent',
               purge: true,
-              recurse: true
+              recurse: true,
             )
           end
 
@@ -367,7 +367,7 @@ describe 'nginx' do
             is_expected.to contain_file('/tmp/nginx.mail.d').with(
               ensure: 'absent',
               purge: true,
-              recurse: true
+              recurse: true,
             )
           end
 
@@ -376,7 +376,7 @@ describe 'nginx' do
 
             it do
               is_expected.to contain_file('/var/log/nginx').with(
-                replace: false
+                replace: false,
               )
             end
           end
@@ -391,7 +391,7 @@ describe 'nginx' do
                 owner: 'nginx',
                 group: 'nginx',
                 mode: '0750',
-                replace: true
+                replace: true,
               )
             end
           when 'Debian'
@@ -403,7 +403,7 @@ describe 'nginx' do
                 owner: 'root',
                 group: 'adm',
                 mode: '0755',
-                replace: true
+                replace: true,
               )
             end
           end
@@ -414,73 +414,73 @@ describe 'nginx' do
                 title: 'should not set load_module',
                 attr: 'dynamic_modules',
                 value: :undef,
-                notmatch: %r{load_module}
+                notmatch: %r{load_module},
               },
               {
                 title: 'should not set user',
                 attr: 'super_user',
                 value: false,
-                notmatch: %r{user}
+                notmatch: %r{user},
               },
               {
                 title: 'should not set group',
                 attr: 'daemon_group',
                 value: :undef,
-                notmatch: %r{^user \S+ \S+;}
+                notmatch: %r{^user \S+ \S+;},
               },
               {
                 title: 'should set user',
                 attr: 'daemon_user',
                 value: 'test-user',
-                match: 'user test-user;'
+                match: 'user test-user;',
               },
               {
                 title: 'should not set daemon',
                 attr: 'daemon',
                 value: :undef,
-                notmatch: %r{^\s*daemon\s+}
+                notmatch: %r{^\s*daemon\s+},
               },
               {
                 title: 'should set daemon on',
                 attr: 'daemon',
                 value: 'on',
-                match: %r{^daemon\s+on;$}
+                match: %r{^daemon\s+on;$},
               },
               {
                 title: 'should set daemon off',
                 attr: 'daemon',
                 value: 'off',
-                match: %r{^daemon\s+off;$}
+                match: %r{^daemon\s+off;$},
               },
               {
                 title: 'should set worker_processes',
                 attr: 'worker_processes',
                 value: 4,
-                match: 'worker_processes 4;'
+                match: 'worker_processes 4;',
               },
               {
                 title: 'should set worker_processes',
                 attr: 'worker_processes',
                 value: 'auto',
-                match: 'worker_processes auto;'
+                match: 'worker_processes auto;',
               },
               {
                 title: 'should set worker_rlimit_nofile',
                 attr: 'worker_rlimit_nofile',
                 value: 10_000,
-                match: 'worker_rlimit_nofile 10000;'
+                match: 'worker_rlimit_nofile 10000;',
               },
               {
                 title: 'should set pcre_jit',
                 attr: 'pcre_jit',
                 value: 'on',
-                match: %r{^\s*pcre_jit\s+on;}
+                match: %r{^\s*pcre_jit\s+on;},
               },
               {
                 title: 'should set error_log',
                 attr: 'nginx_error_log',
                 value: '/path/to/error.log',
-                match: '  error_log /path/to/error.log error;'
+                match: '  error_log /path/to/error.log error;',
               },
               {
                 title: 'should set multiple error_logs',
@@ -488,74 +488,74 @@ describe 'nginx' do
                 value: ['/path/to/error.log', 'syslog:server=localhost'],
                 match: [
                   '  error_log /path/to/error.log error;',
-                  '  error_log syslog:server=localhost error;'
-                ]
+                  '  error_log syslog:server=localhost error;',
+                ],
               },
               {
                 title: 'should set error_log severity level',
                 attr: 'nginx_error_log_severity',
                 value: 'warn',
-                match: '  error_log /var/log/nginx/error.log warn;'
+                match: '  error_log /var/log/nginx/error.log warn;',
               },
               {
                 title: 'should set limit_req_zone',
                 attr: 'limit_req_zone',
                 value: [
                   '$binary_remote_addr zone=myzone1:10m rate=5r/s',
-                  '$binary_remote_addr zone=myzone2:10m rate=5r/s'
+                  '$binary_remote_addr zone=myzone2:10m rate=5r/s',
                 ],
                 match: [
                   '  limit_req_zone $binary_remote_addr zone=myzone1:10m rate=5r/s;',
-                  '  limit_req_zone $binary_remote_addr zone=myzone2:10m rate=5r/s;'
-                ]
+                  '  limit_req_zone $binary_remote_addr zone=myzone2:10m rate=5r/s;',
+                ],
               },
               {
                 title: 'should set pid',
                 attr: 'pid',
                 value: '/path/to/pid',
-                match: 'pid        /path/to/pid;'
+                match: 'pid        /path/to/pid;',
               },
               {
                 title: 'should not set pid',
                 attr: 'pid',
                 value: false,
-                notmatch: %r{pid}
+                notmatch: %r{pid},
               },
               {
                 title: 'should not set absolute_redirect',
                 attr: 'absolute_redirect',
                 value: :undef,
-                notmatch: %r{absolute_redirect}
+                notmatch: %r{absolute_redirect},
               },
               {
                 title: 'should set absolute_redirect off',
                 attr: 'absolute_redirect',
                 value: 'off',
-                match: '  absolute_redirect off;'
+                match: '  absolute_redirect off;',
               },
               {
                 title: 'should set accept_mutex on',
                 attr: 'accept_mutex',
                 value: 'on',
-                match: '  accept_mutex on;'
+                match: '  accept_mutex on;',
               },
               {
                 title: 'should set accept_mutex off',
                 attr: 'accept_mutex',
                 value: 'off',
-                match: '  accept_mutex off;'
+                match: '  accept_mutex off;',
               },
               {
                 title: 'should set accept_mutex_delay',
                 attr: 'accept_mutex_delay',
                 value: '500s',
-                match: '  accept_mutex_delay 500s;'
+                match: '  accept_mutex_delay 500s;',
               },
               {
                 title: 'should set worker_connections',
                 attr: 'worker_connections',
                 value: 100,
-                match: '  worker_connections 100;'
+                match: '  worker_connections 100;',
               },
               {
                 title: 'should set log formats',
@@ -575,44 +575,44 @@ describe 'nginx' do
                   '  log_format format1 "FORMAT1";',
                   '  log_format format2 "FORMAT2";',
                   '  log_format format3 "FORMAT3";',
-                  '  log_format format4 escape=json "{\\"response\\": $status, \\"verb\\": \\"$request_method\\"}";'
-                ]
+                  '  log_format format4 escape=json "{\\"response\\": $status, \\"verb\\": \\"$request_method\\"}";',
+                ],
               },
               {
                 title: 'should not set log formats',
                 attr: 'log_format',
                 value: {},
-                notmatch: %r{log_format}
+                notmatch: %r{log_format},
               },
               {
                 title: 'should set multi_accept',
                 attr: 'multi_accept',
                 value: 'on',
-                match: %r{\s*multi_accept\s+on;}
+                match: %r{\s*multi_accept\s+on;},
               },
               {
                 title: 'should not set multi_accept',
                 attr: 'multi_accept',
                 value: 'off',
-                notmatch: %r{multi_accept}
+                notmatch: %r{multi_accept},
               },
               {
                 title: 'should set etag',
                 attr: 'etag',
                 value: 'off',
-                match: '  etag off;'
+                match: '  etag off;',
               },
               {
                 title: 'should set events_use',
                 attr: 'events_use',
                 value: 'eventport',
-                match: %r{\s*use\s+eventport;}
+                match: %r{\s*use\s+eventport;},
               },
               {
                 title: 'should set access_log',
                 attr: 'http_access_log',
                 value: '/path/to/access.log',
-                match: '  access_log /path/to/access.log;'
+                match: '  access_log /path/to/access.log;',
               },
               {
                 title: 'should set multiple access_logs',
@@ -620,152 +620,158 @@ describe 'nginx' do
                 value: ['/path/to/access.log', 'syslog:server=localhost'],
                 match: [
                   '  access_log /path/to/access.log;',
-                  '  access_log syslog:server=localhost;'
-                ]
+                  '  access_log syslog:server=localhost;',
+                ],
               },
               {
                 title: 'should set custom log format',
                 attr: 'http_format_log',
                 value: 'mycustomformat',
-                match: '  access_log /var/log/nginx/access.log mycustomformat;'
+                match: '  access_log /var/log/nginx/access.log mycustomformat;',
               },
               {
                 title: 'should set sendfile',
                 attr: 'sendfile',
                 value: 'on',
-                match: '  sendfile on;'
+                match: '  sendfile on;',
               },
               {
                 title: 'should not set sendfile',
                 attr: 'sendfile',
                 value: 'off',
-                notmatch: %r{sendfile}
+                notmatch: %r{sendfile},
               },
               {
                 title: 'should set server_tokens',
                 attr: 'server_tokens',
                 value: 'on',
-                match: '  server_tokens on;'
+                match: '  server_tokens on;',
               },
               {
                 title: 'should set types_hash_max_size',
                 attr: 'types_hash_max_size',
                 value: 10,
-                match: '  types_hash_max_size 10;'
+                match: '  types_hash_max_size 10;',
               },
               {
                 title: 'should set types_hash_bucket_size',
                 attr: 'types_hash_bucket_size',
                 value: 10,
-                match: '  types_hash_bucket_size 10;'
+                match: '  types_hash_bucket_size 10;',
               },
               {
                 title: 'should set server_names_hash_bucket_size',
                 attr: 'names_hash_bucket_size',
                 value: 10,
-                match: '  server_names_hash_bucket_size 10;'
+                match: '  server_names_hash_bucket_size 10;',
               },
               {
                 title: 'should set server_names_hash_max_size',
                 attr: 'names_hash_max_size',
                 value: 10,
-                match: '  server_names_hash_max_size 10;'
+                match: '  server_names_hash_max_size 10;',
               },
               {
                 title: 'should set map_hash_bucket_size',
                 attr: 'map_hash_bucket_size',
                 value: 32,
-                match: '  map_hash_bucket_size 32;'
+                match: '  map_hash_bucket_size 32;',
               },
               {
                 title: 'should set map_hash_max_size',
                 attr: 'map_hash_max_size',
                 value: 2048,
-                match: '  map_hash_max_size 2048;'
+                match: '  map_hash_max_size 2048;',
               },
               {
                 title: 'should set keepalive_timeout',
                 attr: 'keepalive_timeout',
                 value: '123',
-                match: '  keepalive_timeout   123;'
+                match: '  keepalive_timeout   123;',
               },
               {
                 title: 'should set keepalive_requests',
                 attr: 'keepalive_requests',
                 value: 345,
-                match: '  keepalive_requests  345;'
+                match: '  keepalive_requests  345;',
               },
               {
                 title: 'should set client_body_timeout',
                 attr: 'client_body_timeout',
                 value: '888',
-                match: '  client_body_timeout 888;'
+                match: '  client_body_timeout 888;',
               },
               {
                 title: 'should set send_timeout',
                 attr: 'send_timeout',
                 value: '963',
-                match: '  send_timeout        963;'
+                match: '  send_timeout        963;',
               },
               {
                 title: 'should set lingering_close',
                 attr: 'lingering_close',
                 value: 'always',
-                match: '  lingering_close      always;'
+                match: '  lingering_close      always;',
               },
               {
                 title: 'should set lingering_time',
                 attr: 'lingering_time',
                 value: '30s',
-                match: '  lingering_time      30s;'
+                match: '  lingering_time      30s;',
               },
               {
                 title: 'should set lingering_timeout',
                 attr: 'lingering_timeout',
                 value: '385',
-                match: '  lingering_timeout   385;'
+                match: '  lingering_timeout   385;',
               },
               {
                 title: 'should set tcp_nodelay',
                 attr: 'http_tcp_nodelay',
                 value: 'on',
-                match: '  tcp_nodelay         on;'
+                match: '  tcp_nodelay         on;',
               },
               {
                 title: 'should set tcp_nopush',
                 attr: 'http_tcp_nopush',
                 value: 'on',
-                match: '  tcp_nopush on;'
+                match: '  tcp_nopush on;',
               },
               {
                 title: 'should not set gzip',
                 attr: 'gzip',
                 value: 'off',
-                notmatch: %r{gzip}
+                notmatch: %r{gzip},
               },
               {
                 title: 'should set proxy_cache_path',
                 attr: 'proxy_cache_path',
                 value: '/path/to/proxy.cache',
-                match: %r{\s+proxy_cache_path\s+/path/to/proxy.cache levels=1 keys_zone=d2:100m max_size=500m inactive=20m;}
+                match: %r{\s+proxy_cache_path\s+/path/to/proxy.cache levels=1 keys_zone=d2:100m max_size=500m inactive=20m;},
               },
               {
                 title: 'should set proxy_cache_path from hash',
                 attr: 'proxy_cache_path',
                 value: { '/path/to/proxy.cache' => 'd2:100m' },
-                match: %r{\s+proxy_cache_path\s+/path/to/proxy.cache levels=1 keys_zone=d2:100m max_size=500m inactive=20m;}
+                match: %r{\s+proxy_cache_path\s+/path/to/proxy.cache levels=1 keys_zone=d2:100m max_size=500m inactive=20m;},
               },
               {
                 title: 'should set fastcgi_cache_path',
                 attr: 'fastcgi_cache_path',
                 value: '/path/to/proxy.cache',
-                match: %r{\s*fastcgi_cache_path\s+/path/to/proxy.cache levels=1 keys_zone=d3:100m max_size=500m inactive=20m;}
+                match: %r{\s*fastcgi_cache_path\s+/path/to/proxy.cache levels=1 keys_zone=d3:100m max_size=500m inactive=20m;},
+              },
+              {
+                title: 'should set fastcgi_cache_path from hash',
+                attr: 'fastcgi_cache_path',
+                value: { '/path/to/proxy.cache' => 'd3:100m' },
+                match: %r{\s*fastcgi_cache_path\s+/path/to/proxy.cache levels=1 keys_zone=d3:100m max_size=500m inactive=20m;},
               },
               {
                 title: 'should set fastcgi_cache_use_stale',
                 attr: 'fastcgi_cache_use_stale',
                 value: 'invalid_header',
-                match: '  fastcgi_cache_use_stale invalid_header;'
+                match: '  fastcgi_cache_use_stale invalid_header;',
               },
               {
                 title: 'should contain http_raw_prepend directives',
@@ -773,9 +779,9 @@ describe 'nginx' do
                 value: [
                   'if (a) {',
                   '  b;',
-                  '}'
+                  '}',
                 ],
-                match: %r{^\s+if \(a\) \{\n\s++b;\n\s+\}}
+                match: %r{^\s+if \(a\) \{\n\s++b;\n\s+\}},
               },
               {
                 title: 'should contain ordered appended directives from hash',
@@ -784,8 +790,8 @@ describe 'nginx' do
                 match: [
                   '  allow test value 3;',
                   '  test1 test value 1;',
-                  '  test2 test value 2;'
-                ]
+                  '  test2 test value 2;',
+                ],
               },
               {
                 title: 'should contain duplicate appended directives from list of hashes',
@@ -793,8 +799,8 @@ describe 'nginx' do
                 value: [['allow', 'test value 1'], ['allow', 'test value 2']],
                 match: [
                   '  allow test value 1;',
-                  '  allow test value 2;'
-                ]
+                  '  allow test value 2;',
+                ],
               },
               {
                 title: 'should contain duplicate appended directives from array values',
@@ -802,8 +808,8 @@ describe 'nginx' do
                 value: { 'test1' => ['test value 1', 'test value 2', 'test value 3'] },
                 match: [
                   '  test1 test value 1;',
-                  '  test1 test value 2;'
-                ]
+                  '  test1 test value 2;',
+                ],
               },
               {
                 title: 'should contain http_raw_append directives',
@@ -811,9 +817,9 @@ describe 'nginx' do
                 value: [
                   'if (a) {',
                   '  b;',
-                  '}'
+                  '}',
                 ],
-                match: %r{^\s+if \(a\) \{\n\s++b;\n\s+\}}
+                match: %r{^\s+if \(a\) \{\n\s++b;\n\s+\}},
               },
               {
                 title: 'should contain ordered appended directives from hash',
@@ -822,8 +828,8 @@ describe 'nginx' do
                 match: [
                   '  allow test value 3;',
                   '  test1 test value 1;',
-                  '  test2 test value 2;'
-                ]
+                  '  test2 test value 2;',
+                ],
               },
               {
                 title: 'should contain duplicate appended directives from list of hashes',
@@ -831,8 +837,8 @@ describe 'nginx' do
                 value: [['allow', 'test value 1'], ['allow', 'test value 2']],
                 match: [
                   '  allow test value 1;',
-                  '  allow test value 2;'
-                ]
+                  '  allow test value 2;',
+                ],
               },
               {
                 title: 'should contain duplicate appended directives from array values',
@@ -840,8 +846,8 @@ describe 'nginx' do
                 value: { 'test1' => ['test value 1', 'test value 2', 'test value 3'] },
                 match: [
                   '  test1 test value 1;',
-                  '  test1 test value 2;'
-                ]
+                  '  test1 test value 2;',
+                ],
               },
               {
                 title: 'should contain ordered appended directives from hash',
@@ -850,8 +856,8 @@ describe 'nginx' do
                 match: [
                   'allow test value 3;',
                   'test1 test value 1;',
-                  'test2 test value 2;'
-                ]
+                  'test2 test value 2;',
+                ],
               },
               {
                 title: 'should contain duplicate appended directives from list of hashes',
@@ -859,8 +865,8 @@ describe 'nginx' do
                 value: [['allow', 'test value 1'], ['allow', 'test value 2']],
                 match: [
                   'allow test value 1;',
-                  'allow test value 2;'
-                ]
+                  'allow test value 2;',
+                ],
               },
               {
                 title: 'should contain duplicate appended directives from array values',
@@ -869,50 +875,50 @@ describe 'nginx' do
                 match: [
                   'test1 test value 1;',
                   'test1 test value 2;',
-                  'test1 test value 3;'
-                ]
+                  'test1 test value 3;',
+                ],
               },
               {
                 title: 'should set pid',
                 attr: 'pid',
                 value: '/path/to/pid',
-                match: 'pid        /path/to/pid;'
+                match: 'pid        /path/to/pid;',
               },
               {
                 title: 'should set mail',
                 attr: 'mail',
                 value: true,
-                match: 'mail {'
+                match: 'mail {',
               },
               {
                 title: 'should not set mail',
                 attr: 'mail',
                 value: false,
-                notmatch: %r{mail}
+                notmatch: %r{mail},
               },
               {
                 title: 'should set proxy_buffers',
                 attr: 'proxy_buffers',
                 value: '50 5k',
-                match: '  proxy_buffers           50 5k;'
+                match: '  proxy_buffers           50 5k;',
               },
               {
                 title: 'should set proxy_buffer_size',
                 attr: 'proxy_buffer_size',
                 value: '2k',
-                match: '  proxy_buffer_size       2k;'
+                match: '  proxy_buffer_size       2k;',
               },
               {
                 title: 'should set proxy_http_version',
                 attr: 'proxy_http_version',
                 value: '1.1',
-                match: '  proxy_http_version      1.1;'
+                match: '  proxy_http_version      1.1;',
               },
               {
                 title: 'should not set proxy_http_version',
                 attr: 'proxy_http_version',
                 value: nil,
-                notmatch: 'proxy_http_version'
+                notmatch: 'proxy_http_version',
               },
               {
                 title: 'should contain ordered appended proxy_set_header directives',
@@ -920,8 +926,8 @@ describe 'nginx' do
                 value: %w[header1 header2],
                 match: [
                   '  proxy_set_header        header1;',
-                  '  proxy_set_header        header2;'
-                ]
+                  '  proxy_set_header        header2;',
+                ],
               },
               {
                 title: 'should contain ordered appended proxy_hide_header directives',
@@ -929,8 +935,8 @@ describe 'nginx' do
                 value: %w[header1 header2],
                 match: [
                   '  proxy_hide_header        header1;',
-                  '  proxy_hide_header        header2;'
-                ]
+                  '  proxy_hide_header        header2;',
+                ],
               },
               {
                 title: 'should contain ordered appended proxy_pass_header directives',
@@ -938,14 +944,14 @@ describe 'nginx' do
                 value: %w[header1 header2],
                 match: [
                   '  proxy_pass_header        header1;',
-                  '  proxy_pass_header        header2;'
-                ]
+                  '  proxy_pass_header        header2;',
+                ],
               },
               {
                 title: 'should set client_body_temp_path',
                 attr: 'client_body_temp_path',
                 value: '/path/to/body_temp',
-                match: '  client_body_temp_path   /path/to/body_temp;'
+                match: '  client_body_temp_path   /path/to/body_temp;',
               },
               {
                 title: 'should set client_body_temp_path with subdirectory hierarchy',
@@ -954,15 +960,15 @@ describe 'nginx' do
                   '/path/to/body_temp',
                   1,
                   2,
-                  3
+                  3,
                 ],
-                match: '  client_body_temp_path   /path/to/body_temp 1 2 3;'
+                match: '  client_body_temp_path   /path/to/body_temp 1 2 3;',
               },
               {
                 title: 'should set proxy_temp_path',
                 attr: 'proxy_temp_path',
                 value: '/path/to/proxy_temp',
-                match: '  proxy_temp_path         /path/to/proxy_temp;'
+                match: '  proxy_temp_path         /path/to/proxy_temp;',
               },
               {
                 title: 'should set proxy_temp_path with subdirectory hierarchy',
@@ -971,177 +977,222 @@ describe 'nginx' do
                   '/path/to/proxy_temp',
                   1,
                   2,
-                  3
+                  3,
                 ],
-                match: '  proxy_temp_path         /path/to/proxy_temp 1 2 3;'
+                match: '  proxy_temp_path         /path/to/proxy_temp 1 2 3;',
               },
               {
                 title: 'should set proxy_max_temp_file_size',
                 attr: 'proxy_max_temp_file_size',
                 value: '1024m',
-                match: '  proxy_max_temp_file_size 1024m;'
+                match: '  proxy_max_temp_file_size 1024m;',
               },
               {
                 title: 'should set proxy_busy_buffers_size',
                 attr: 'proxy_busy_buffers_size',
                 value: '16k',
-                match: '  proxy_busy_buffers_size 16k;'
+                match: '  proxy_busy_buffers_size 16k;',
+              },
+              {
+                title: 'should not set set_real_ip_from',
+                attr: 'set_real_ip_from',
+                value: :undef,
+                notmatch: 'set_real_ip_from',
+              },
+              {
+                title: 'should set set_real_ip_from with single value',
+                attr: 'set_real_ip_from',
+                value: '192.168.1.0/24',
+                match: '  set_real_ip_from        192.168.1.0/24;',
+              },
+              {
+                title: 'should set set_real_ip_from with multiple values',
+                attr: 'set_real_ip_from',
+                value: ['192.168.1.0/24', '10.0.0.0/8'],
+                match: [
+                  '  set_real_ip_from        192.168.1.0/24;',
+                  '  set_real_ip_from        10.0.0.0/8;',
+                ],
+              },
+              {
+                title: 'should not set real_ip_header',
+                attr: 'real_ip_header',
+                value: :undef,
+                notmatch: 'real_ip_header',
+              },
+              {
+                title: 'should set real_ip_header',
+                attr: 'real_ip_header',
+                value: 'X-Forwarded-For',
+                match: '  real_ip_header          X-Forwarded-For;',
+              },
+              {
+                title: 'should not set real_ip_recursive',
+                attr: 'real_ip_recursive',
+                value: :undef,
+                notmatch: 'real_ip_recursive',
+              },
+              {
+                title: 'should set real_ip_recursive',
+                attr: 'real_ip_recursive',
+                value: 'on',
+                match: '  real_ip_recursive       on;',
               },
               {
                 title: 'should set ssl_stapling_verify',
                 attr: 'ssl_stapling_verify',
                 value: 'on',
-                match: '  ssl_stapling_verify       on;'
+                match: '  ssl_stapling_verify       on;',
               },
               {
                 title: 'should set ssl_protocols',
                 attr: 'ssl_protocols',
                 value: 'TLSv1.2',
-                match: '  ssl_protocols             TLSv1.2;'
+                match: '  ssl_protocols             TLSv1.2;',
               },
               {
                 title: 'should set ssl_ciphers',
                 attr: 'ssl_ciphers',
                 value: 'ECDHE-ECDSA-CHACHA20-POLY1305',
-                match: '  ssl_ciphers               ECDHE-ECDSA-CHACHA20-POLY1305;'
+                match: '  ssl_ciphers               ECDHE-ECDSA-CHACHA20-POLY1305;',
               },
               {
                 title: 'should set ssl_dhparam',
                 attr: 'ssl_dhparam',
                 value: '/path/to/dhparam',
-                match: '  ssl_dhparam               /path/to/dhparam;'
+                match: '  ssl_dhparam               /path/to/dhparam;',
               },
               {
                 title: 'should not set ssl_ecdh_curve',
                 attr: 'ssl_ecdh_curve',
                 value: :undef,
-                notmatch: 'ssl_ecdh_curve'
+                notmatch: 'ssl_ecdh_curve',
               },
               {
                 title: 'should set ssl_ecdh_curve',
                 attr: 'ssl_ecdh_curve',
                 value: 'prime256v1:secp384r1',
-                match: '  ssl_ecdh_curve            prime256v1:secp384r1;'
+                match: '  ssl_ecdh_curve            prime256v1:secp384r1;',
               },
               {
                 title: 'should set ssl_session_cache',
                 attr: 'ssl_session_cache',
                 value: 'shared:SSL:10m',
-                match: '  ssl_session_cache         shared:SSL:10m;'
+                match: '  ssl_session_cache         shared:SSL:10m;',
               },
               {
                 title: 'should set ssl_session_timeout',
                 attr: 'ssl_session_timeout',
                 value: '5m',
-                match: '  ssl_session_timeout       5m;'
+                match: '  ssl_session_timeout       5m;',
               },
               {
                 title: 'should not set ssl_session_tickets',
                 attr: 'ssl_session_tickets',
                 value: :undef,
-                notmatch: 'ssl_session_tickets'
+                notmatch: 'ssl_session_tickets',
               },
               {
                 title: 'should set ssl_session_tickets',
                 attr: 'ssl_session_tickets',
                 value: 'on',
-                match: '  ssl_session_tickets       on;'
+                match: '  ssl_session_tickets       on;',
               },
               {
                 title: 'should not set ssl_session_ticket_key',
                 attr: 'ssl_session_ticket_key',
                 value: :undef,
-                notmatch: 'ssl_session_ticket_key'
+                notmatch: 'ssl_session_ticket_key',
               },
               {
                 title: 'should set ssl_session_ticket_key',
                 attr: 'ssl_session_ticket_key',
                 value: '/path/to/ticket_key',
-                match: '  ssl_session_ticket_key    /path/to/ticket_key;'
+                match: '  ssl_session_ticket_key    /path/to/ticket_key;',
               },
               {
                 title: 'should not set ssl_buffer_size',
                 attr: 'ssl_buffer_size',
                 value: :undef,
-                notmatch: 'ssl_buffer_size'
+                notmatch: 'ssl_buffer_size',
               },
               {
                 title: 'should set ssl_buffer_size',
                 attr: 'ssl_buffer_size',
                 value: '16k',
-                match: '  ssl_buffer_size           16k;'
+                match: '  ssl_buffer_size           16k;',
               },
               {
                 title: 'should not set ssl_crl',
                 attr: 'ssl_crl',
                 value: :undef,
-                notmatch: 'ssl_crl'
+                notmatch: 'ssl_crl',
               },
               {
                 title: 'should set ssl_crl',
                 attr: 'ssl_crl',
                 value: '/path/to/crl',
-                match: '  ssl_crl                   /path/to/crl;'
+                match: '  ssl_crl                   /path/to/crl;',
               },
               {
                 title: 'should not set ssl_stapling_file',
                 attr: 'ssl_stapling_file',
                 value: :undef,
-                notmatch: 'ssl_stapling_file'
+                notmatch: 'ssl_stapling_file',
               },
               {
                 title: 'should set ssl_stapling_file',
                 attr: 'ssl_stapling_file',
                 value: '/path/to/stapling_file',
-                match: '  ssl_stapling_file         /path/to/stapling_file;'
+                match: '  ssl_stapling_file         /path/to/stapling_file;',
               },
               {
                 title: 'should not set ssl_stapling_responder',
                 attr: 'ssl_stapling_responder',
                 value: :undef,
-                notmatch: 'ssl_stapling_responder'
+                notmatch: 'ssl_stapling_responder',
               },
               {
                 title: 'should set ssl_stapling_responder',
                 attr: 'ssl_stapling_responder',
                 value: 'http://stapling.responder/',
-                match: '  ssl_stapling_responder    http://stapling.responder/;'
+                match: '  ssl_stapling_responder    http://stapling.responder/;',
               },
               {
                 title: 'should not set ssl_trusted_certificate',
                 attr: 'ssl_trusted_certificate',
                 value: :undef,
-                notmatch: 'ssl_trusted_certificate'
+                notmatch: 'ssl_trusted_certificate',
               },
               {
                 title: 'should set ssl_trusted_certificate',
                 attr: 'ssl_trusted_certificate',
                 value: '/path/to/trusted_cert',
-                match: '  ssl_trusted_certificate   /path/to/trusted_cert;'
+                match: '  ssl_trusted_certificate   /path/to/trusted_cert;',
               },
               {
                 title: 'should not set ssl_verify_depth',
                 attr: 'ssl_verify_depth',
                 value: :undef,
-                notmatch: 'ssl_verify_depth'
+                notmatch: 'ssl_verify_depth',
               },
               {
                 title: 'should set ssl_verify_depth',
                 attr: 'ssl_verify_depth',
                 value: 5,
-                match: '  ssl_verify_depth          5;'
+                match: '  ssl_verify_depth          5;',
               },
               {
                 title: 'should not set ssl_password_file',
                 attr: 'ssl_password_file',
                 value: :undef,
-                notmatch: 'ssl_password_file'
+                notmatch: 'ssl_password_file',
               },
               {
                 title: 'should set ssl_password_file',
                 attr: 'ssl_password_file',
                 value: '/path/to/password_file',
-                match: '  ssl_password_file         /path/to/password_file;'
+                match: '  ssl_password_file         /path/to/password_file;',
               },
               {
                 title: 'should contain debug_connection directives',
@@ -1149,39 +1200,39 @@ describe 'nginx' do
                 value: %w[127.0.0.1 unix:],
                 match: [
                   '  debug_connection 127.0.0.1;',
-                  '  debug_connection unix:;'
-                ]
+                  '  debug_connection unix:;',
+                ],
               },
               {
                 title: 'should set reset_timedout_connection',
                 attr: 'reset_timedout_connection',
                 value: 'on',
-                match: %r{^\s+reset_timedout_connection\s+on;}
+                match: %r{^\s+reset_timedout_connection\s+on;},
               },
               {
                 title: 'should set variables_hash_bucket_size',
                 attr: 'variables_hash_bucket_size',
                 value: 64,
-                match: '  variables_hash_bucket_size 64;'
+                match: '  variables_hash_bucket_size 64;',
               },
               {
                 title: 'should set variables_hash_max_size',
                 attr: 'variables_hash_max_size',
                 value: 1024,
-                match: '  variables_hash_max_size 1024;'
+                match: '  variables_hash_max_size 1024;',
               },
               {
                 title: 'should set proxy_headers_hash_bucket_size',
                 attr: 'proxy_headers_hash_bucket_size',
                 value: 64,
-                match: '  proxy_headers_hash_bucket_size 64;'
+                match: '  proxy_headers_hash_bucket_size 64;',
               },
               {
                 title: 'should set proxy_headers_hash_max_size',
                 attr: 'proxy_headers_hash_max_size',
                 value: 512,
-                match: '  proxy_headers_hash_max_size 512;'
-              }
+                match: '  proxy_headers_hash_max_size 512;',
+              },
             ].each do |param|
               context "when #{param[:attr]} is #{param[:value]}" do
                 let(:params) { { param[:attr].to_sym => param[:value] } }
@@ -1222,7 +1273,7 @@ describe 'nginx' do
           context 'when mime.types is "[\'text/css css\']"' do
             let(:params) do
               {
-                mime_types: { 'text/css' => 'css' }
+                mime_types: { 'text/css' => 'css' },
               }
             end
 
@@ -1238,7 +1289,7 @@ describe 'nginx' do
             let(:params) do
               {
                 mime_types: { 'custom/file' => 'customfile' },
-                mime_types_preserve_defaults: true
+                mime_types_preserve_defaults: true,
               }
             end
 
@@ -1249,7 +1300,7 @@ describe 'nginx' do
           context 'when dynamic_modules is "[ngx_http_geoip_module]"' do
             let(:params) do
               {
-                dynamic_modules: ['ngx_http_geoip_module']
+                dynamic_modules: ['ngx_http_geoip_module'],
               }
             end
 
@@ -1259,7 +1310,7 @@ describe 'nginx' do
           context 'when dynamic_modules is "[/path/to/module/ngx_http_geoip_module.so]"' do
             let(:params) do
               {
-                dynamic_modules: ['/path/to/module/ngx_http_geoip_module.so']
+                dynamic_modules: ['/path/to/module/ngx_http_geoip_module.so'],
               }
             end
 
@@ -1271,7 +1322,7 @@ describe 'nginx' do
               {
                 conf_dir: '/path/to/nginx',
                 proxy_cache_path: '/path/to/proxy.cache',
-                proxy_cache_loader_files: 1000
+                proxy_cache_loader_files: 1000,
               }
             end
 
@@ -1310,7 +1361,7 @@ describe 'nginx' do
             it do
               is_expected.to contain_file('/etc/nginx/conf.d').with(
                 purge: true,
-                recurse: true
+                recurse: true,
               )
             end
           end
@@ -1324,7 +1375,7 @@ describe 'nginx' do
                   ignore
                   purge
                   recurse
-                ]
+                ],
               )
             end
           end
@@ -1338,7 +1389,7 @@ describe 'nginx' do
                   ignore
                   purge
                   recurse
-                ]
+                ],
               )
               is_expected.not_to contain_file('/etc/nginx/sites-available')
               is_expected.not_to contain_file('/etc/nginx/sites-enabled')
@@ -1354,14 +1405,14 @@ describe 'nginx' do
             it do
               is_expected.to contain_file('/etc/nginx/sites-available').with(
                 purge: true,
-                recurse: true
+                recurse: true,
               )
             end
 
             it do
               is_expected.to contain_file('/etc/nginx/sites-enabled').with(
                 purge: true,
-                recurse: true
+                recurse: true,
               )
             end
           end
@@ -1371,21 +1422,21 @@ describe 'nginx' do
               {
                 confd_purge: true,
                 confd_only: true,
-                server_purge: true
+                server_purge: true,
               }
             end
 
             it do
               is_expected.to contain_file('/etc/nginx/conf.d').with(
                 purge: true,
-                recurse: true
+                recurse: true,
               )
             end
 
             it do
               is_expected.to contain_file('/etc/nginx/conf.stream.d').with(
                 purge: true,
-                recurse: true
+                recurse: true,
               )
             end
           end
@@ -1394,7 +1445,7 @@ describe 'nginx' do
             let(:params) do
               {
                 confd_purge: true,
-                confd_only: true
+                confd_only: true,
               }
             end
 
@@ -1402,7 +1453,7 @@ describe 'nginx' do
               is_expected.to contain_file('/etc/nginx/conf.d').without(
                 %w[
                   purge
-                ]
+                ],
               )
             end
 
@@ -1410,7 +1461,7 @@ describe 'nginx' do
               is_expected.to contain_file('/etc/nginx/conf.stream.d').without(
                 %w[
                   purge
-                ]
+                ],
               )
             end
           end
@@ -1424,7 +1475,7 @@ describe 'nginx' do
                   ignore
                   purge
                   recurse
-                ]
+                ],
               )
             end
 
@@ -1434,7 +1485,7 @@ describe 'nginx' do
                   ignore
                   purge
                   recurse
-                ]
+                ],
               )
             end
 
@@ -1444,7 +1495,7 @@ describe 'nginx' do
                   ignore
                   purge
                   recurse
-                ]
+                ],
               )
             end
 
@@ -1454,7 +1505,7 @@ describe 'nginx' do
                   ignore
                   purge
                   recurse
-                ]
+                ],
               )
             end
 
@@ -1464,7 +1515,7 @@ describe 'nginx' do
                   ignore
                   purge
                   recurse
-                ]
+                ],
               )
             end
           end
@@ -1488,13 +1539,13 @@ describe 'nginx' do
 
             it do
               is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{access_log /foo/bar/access.log;}
+                %r{access_log /foo/bar/access.log;},
               )
             end
 
             it do
               is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{error_log /foo/bar/error.log error;}
+                %r{error_log /foo/bar/error.log error;},
               )
             end
           end
@@ -1510,43 +1561,13 @@ describe 'nginx' do
 
             it do
               is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip              on;}
+                %r{  gzip              on;},
               )
             end
 
             it do
               is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip_comp_level   1;}
-              )
-            end
-
-            it do
-              is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip_disable      msie6;}
-              )
-            end
-
-            it do
-              is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip_min_length   20;}
-              )
-            end
-
-            it do
-              is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip_http_version 1.1;}
-              )
-            end
-
-            it do
-              is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip_vary         off;}
-              )
-            end
-
-            it do
-              is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip_proxied      off;}
+                %r{  gzip_disable      msie6;},
               )
             end
           end
@@ -1555,13 +1576,13 @@ describe 'nginx' do
             let(:params) do
               {
                 gzip: 'on',
-                gzip_types: ['text/plain', 'text/html']
+                gzip_types: ['text/plain', 'text/html'],
               }
             end
 
             it do
               is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip_types        text/plain text/html;}
+                %r{  gzip_types        text/plain text/html;},
               )
             end
           end
@@ -1570,13 +1591,13 @@ describe 'nginx' do
             let(:params) do
               {
                 gzip: 'on',
-                gzip_types: 'text/plain'
+                gzip_types: 'text/plain',
               }
             end
 
             it do
               is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip_types        text/plain;}
+                %r{  gzip_types        text/plain;},
               )
             end
           end
@@ -1585,13 +1606,13 @@ describe 'nginx' do
             let(:params) do
               {
                 gzip: 'on',
-                gzip_buffers: '32 4k'
+                gzip_buffers: '32 4k',
               }
             end
 
             it do
               is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip_buffers      32 4k;}
+                %r{  gzip_buffers      32 4k;},
               )
             end
           end
@@ -1615,13 +1636,13 @@ describe 'nginx' do
           context 'when gzip_static is non-default set gzip_static' do
             let(:params) do
               {
-                gzip_static: 'on'
+                gzip_static: 'on',
               }
             end
 
             it do
               is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{  gzip_static       on;}
+                %r{  gzip_static       on;},
               )
             end
           end
@@ -1631,7 +1652,7 @@ describe 'nginx' do
 
             it do
               is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                %r{stream\s\{}
+                %r{stream\s\{},
               )
             end
 
@@ -1642,7 +1663,7 @@ describe 'nginx' do
 
               it do
                 is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                  %r{log_format stream_format 'STREAM_FORMAT';}
+                  %r{log_format stream_format 'STREAM_FORMAT';},
                 )
               end
             end
@@ -1650,7 +1671,7 @@ describe 'nginx' do
             context 'when stream_custom_format_log is default' do
               it do
                 is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                  %r{access_log /var/log/nginx/stream-access.log;}
+                  %r{access_log /var/log/nginx/stream-access.log;},
                 )
               end
             end
@@ -1662,7 +1683,7 @@ describe 'nginx' do
 
               it do
                 is_expected.to contain_file('/etc/nginx/nginx.conf').with_content(
-                  %r{access_log /var/log/nginx/stream-access.log stream_format;}
+                  %r{access_log /var/log/nginx/stream-access.log stream_format;},
                 )
               end
             end

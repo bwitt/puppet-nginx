@@ -192,6 +192,10 @@ The following parameters are available in the `nginx` class:
 * [`proxy_ignore_header`](#-nginx--proxy_ignore_header)
 * [`proxy_max_temp_file_size`](#-nginx--proxy_max_temp_file_size)
 * [`proxy_busy_buffers_size`](#-nginx--proxy_busy_buffers_size)
+* [`grpc`](#-nginx--grpc)
+* [`real_ip_header`](#-nginx--real_ip_header)
+* [`real_ip_recursive`](#-nginx--real_ip_recursive)
+* [`set_real_ip_from`](#-nginx--set_real_ip_from)
 * [`sendfile`](#-nginx--sendfile)
 * [`server_tokens`](#-nginx--server_tokens)
 * [`spdy`](#-nginx--spdy)
@@ -534,7 +538,7 @@ Default value: `'error'`
 
 ##### <a name="-nginx--pid"></a>`pid`
 
-Data type: `Variant[Stdlib::Absolutepath,Boolean]`
+Data type: `Variant[Stdlib::Absolutepath, Boolean]`
 
 
 
@@ -638,63 +642,63 @@ Default value: `undef`
 
 ##### <a name="-nginx--accept_mutex"></a>`accept_mutex`
 
-Data type: `Enum['on', 'off']`
+Data type: `Optional[Enum['on', 'off']]`
 
 
 
-Default value: `'on'`
+Default value: `undef`
 
 ##### <a name="-nginx--accept_mutex_delay"></a>`accept_mutex_delay`
 
-Data type: `Nginx::Time`
+Data type: `Optional[Nginx::Time]`
 
 
 
-Default value: `'500ms'`
+Default value: `undef`
 
 ##### <a name="-nginx--client_body_buffer_size"></a>`client_body_buffer_size`
 
-Data type: `Nginx::Size`
+Data type: `Optional[Nginx::Size]`
 
 
 
-Default value: `'128k'`
+Default value: `undef`
 
 ##### <a name="-nginx--client_max_body_size"></a>`client_max_body_size`
 
-Data type: `Nginx::Size`
+Data type: `Optional[Nginx::Size]`
 
 
 
-Default value: `'10m'`
+Default value: `undef`
 
 ##### <a name="-nginx--client_body_timeout"></a>`client_body_timeout`
 
-Data type: `Nginx::Time`
+Data type: `Optional[Nginx::Time]`
 
 
 
-Default value: `'60s'`
+Default value: `undef`
 
 ##### <a name="-nginx--send_timeout"></a>`send_timeout`
 
-Data type: `Nginx::Time`
+Data type: `Optional[Nginx::Time]`
 
 
 
-Default value: `'60s'`
+Default value: `undef`
 
 ##### <a name="-nginx--lingering_timeout"></a>`lingering_timeout`
 
-Data type: `Nginx::Time`
+Data type: `Optional[Nginx::Time]`
 
 
 
-Default value: `'5s'`
+Default value: `undef`
 
 ##### <a name="-nginx--lingering_close"></a>`lingering_close`
 
-Data type: `Optional[Enum['on','off','always']]`
+Data type: `Optional[Enum['on', 'off', 'always']]`
 
 
 
@@ -766,7 +770,7 @@ Default value: `'500m'`
 
 ##### <a name="-nginx--fastcgi_cache_path"></a>`fastcgi_cache_path`
 
-Data type: `Optional[String]`
+Data type: `Optional[Variant[Hash,String[1]]]`
 
 
 
@@ -782,11 +786,11 @@ Default value: `undef`
 
 ##### <a name="-nginx--gzip"></a>`gzip`
 
-Data type: `Enum['on', 'off']`
+Data type: `Optional[Enum['on', 'off']]`
 
 
 
-Default value: `'off'`
+Default value: `undef`
 
 ##### <a name="-nginx--gzip_buffers"></a>`gzip_buffers`
 
@@ -798,11 +802,11 @@ Default value: `undef`
 
 ##### <a name="-nginx--gzip_comp_level"></a>`gzip_comp_level`
 
-Data type: `Integer`
+Data type: `Optional[Integer]`
 
 
 
-Default value: `1`
+Default value: `undef`
 
 ##### <a name="-nginx--gzip_disable"></a>`gzip_disable`
 
@@ -814,31 +818,31 @@ Default value: `'msie6'`
 
 ##### <a name="-nginx--gzip_min_length"></a>`gzip_min_length`
 
-Data type: `Integer`
+Data type: `Optional[Integer]`
 
 
 
-Default value: `20`
+Default value: `undef`
 
 ##### <a name="-nginx--gzip_http_version"></a>`gzip_http_version`
 
-Data type: `Enum['1.0','1.1']`
+Data type: `Optional[Enum['1.0', '1.1']]`
 
 
 
-Default value: `'1.1'`
+Default value: `undef`
 
 ##### <a name="-nginx--gzip_proxied"></a>`gzip_proxied`
 
-Data type: `Variant[Nginx::GzipProxied, Array[Nginx::GzipProxied]]`
+Data type: `Optional[Variant[Nginx::GzipProxied, Array[Nginx::GzipProxied]]]`
 
 
 
-Default value: `'off'`
+Default value: `undef`
 
 ##### <a name="-nginx--gzip_types"></a>`gzip_types`
 
-Data type: `Optional[Variant[String[1],Array[String[1]]]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
 
 
@@ -846,11 +850,11 @@ Default value: `undef`
 
 ##### <a name="-nginx--gzip_vary"></a>`gzip_vary`
 
-Data type: `Enum['on', 'off']`
+Data type: `Optional[Enum['on', 'off']]`
 
 
 
-Default value: `'off'`
+Default value: `undef`
 
 ##### <a name="-nginx--gzip_static"></a>`gzip_static`
 
@@ -894,35 +898,35 @@ Default value: `undef`
 
 ##### <a name="-nginx--http_tcp_nodelay"></a>`http_tcp_nodelay`
 
-Data type: `Enum['on', 'off']`
+Data type: `Optional[Enum['on', 'off']]`
 
 
 
-Default value: `'on'`
+Default value: `undef`
 
 ##### <a name="-nginx--http_tcp_nopush"></a>`http_tcp_nopush`
 
-Data type: `Enum['on', 'off']`
+Data type: `Optional[Enum['on', 'off']]`
 
 
 
-Default value: `'off'`
+Default value: `undef`
 
 ##### <a name="-nginx--keepalive_timeout"></a>`keepalive_timeout`
 
-Data type: `Nginx::Time`
+Data type: `Optional[Nginx::Time]`
 
 
 
-Default value: `'65s'`
+Default value: `undef`
 
 ##### <a name="-nginx--keepalive_requests"></a>`keepalive_requests`
 
-Data type: `Integer`
+Data type: `Optional[Integer]`
 
 
 
-Default value: `100`
+Default value: `undef`
 
 ##### <a name="-nginx--log_format"></a>`log_format`
 
@@ -982,31 +986,31 @@ Default value: `false`
 
 ##### <a name="-nginx--multi_accept"></a>`multi_accept`
 
-Data type: `String`
+Data type: `Optional[Enum['on', 'off']]`
 
 
 
-Default value: `'off'`
+Default value: `undef`
 
 ##### <a name="-nginx--names_hash_bucket_size"></a>`names_hash_bucket_size`
 
-Data type: `Integer`
+Data type: `Optional[Integer]`
 
 
 
-Default value: `64`
+Default value: `undef`
 
 ##### <a name="-nginx--names_hash_max_size"></a>`names_hash_max_size`
 
-Data type: `Integer`
+Data type: `Optional[Integer]`
 
 
 
-Default value: `512`
+Default value: `undef`
 
 ##### <a name="-nginx--nginx_cfg_prepend"></a>`nginx_cfg_prepend`
 
-Data type: `Variant[Boolean,Array,Hash]`
+Data type: `Variant[Boolean, Array, Hash]`
 
 
 
@@ -1014,19 +1018,19 @@ Default value: `false`
 
 ##### <a name="-nginx--proxy_buffers"></a>`proxy_buffers`
 
-Data type: `String`
+Data type: `Optional[String]`
 
 
 
-Default value: `'32 4k'`
+Default value: `undef`
 
 ##### <a name="-nginx--proxy_buffer_size"></a>`proxy_buffer_size`
 
-Data type: `Nginx::Size`
+Data type: `Optional[Nginx::Size]`
 
 
 
-Default value: `'8k'`
+Default value: `undef`
 
 ##### <a name="-nginx--proxy_cache_inactive"></a>`proxy_cache_inactive`
 
@@ -1102,19 +1106,19 @@ Default value: `undef`
 
 ##### <a name="-nginx--proxy_connect_timeout"></a>`proxy_connect_timeout`
 
-Data type: `Nginx::Time`
+Data type: `Optional[Nginx::Time]`
 
 
 
-Default value: `'90s'`
+Default value: `undef`
 
 ##### <a name="-nginx--proxy_headers_hash_bucket_size"></a>`proxy_headers_hash_bucket_size`
 
-Data type: `Integer`
+Data type: `Optional[Integer]`
 
 
 
-Default value: `64`
+Default value: `undef`
 
 ##### <a name="-nginx--proxy_headers_hash_max_size"></a>`proxy_headers_hash_max_size`
 
@@ -1142,7 +1146,7 @@ Default value: `'90s'`
 
 ##### <a name="-nginx--proxy_redirect"></a>`proxy_redirect`
 
-Data type: `Optional[Variant[Array[String],String]]`
+Data type: `Optional[Variant[Array[String], String]]`
 
 
 
@@ -1215,21 +1219,59 @@ Data type: `Optional[Nginx::Size]`
 
 Default value: `undef`
 
+##### <a name="-nginx--grpc"></a>`grpc`
+
+Data type: `Optional[String]`
+
+Sets the gRPC server address (`grpc_pass`)
+
+Default value: `undef`
+
+##### <a name="-nginx--real_ip_header"></a>`real_ip_header`
+
+Data type: `Optional[String[1]]`
+
+Defines the request header field whose value will be used to replace the
+client address. See http://nginx.org/en/docs/http/ngx_http_realip_module.html
+
+Default value: `undef`
+
+##### <a name="-nginx--real_ip_recursive"></a>`real_ip_recursive`
+
+Data type: `Optional[Enum['on', 'off']]`
+
+If disabled, the original client address that matches one of the trusted
+addresses is replaced by the last address sent in the request header field.
+If enabled, the original client address that matches one of the trusted
+addresses is replaced by the last non-trusted address sent in the request
+header field.
+
+Default value: `undef`
+
+##### <a name="-nginx--set_real_ip_from"></a>`set_real_ip_from`
+
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
+
+Defines trusted addresses that are known to send correct replacement
+addresses.
+
+Default value: `undef`
+
 ##### <a name="-nginx--sendfile"></a>`sendfile`
 
-Data type: `Enum['on', 'off']`
+Data type: `Optional[Enum['on', 'off']]`
 
 
 
-Default value: `'on'`
+Default value: `undef`
 
 ##### <a name="-nginx--server_tokens"></a>`server_tokens`
 
-Data type: `Enum['on', 'off']`
+Data type: `Optional[Enum['on', 'off']]`
 
 
 
-Default value: `'on'`
+Default value: `undef`
 
 ##### <a name="-nginx--spdy"></a>`spdy`
 
@@ -1249,19 +1291,19 @@ Default value: `'off'`
 
 ##### <a name="-nginx--ssl_stapling"></a>`ssl_stapling`
 
-Data type: `Enum['on', 'off']`
+Data type: `Optional[Enum['on', 'off']]`
 
 
 
-Default value: `'off'`
+Default value: `undef`
 
 ##### <a name="-nginx--ssl_stapling_verify"></a>`ssl_stapling_verify`
 
-Data type: `Enum['on', 'off']`
+Data type: `Optional[Enum['on', 'off']]`
 
 
 
-Default value: `'off'`
+Default value: `undef`
 
 ##### <a name="-nginx--snippets_dir"></a>`snippets_dir`
 
@@ -1281,27 +1323,27 @@ Default value: `true`
 
 ##### <a name="-nginx--types_hash_bucket_size"></a>`types_hash_bucket_size`
 
-Data type: `Variant[Integer,String]`
+Data type: `Optional[Integer]`
 
 
 
-Default value: `'512'`
+Default value: `undef`
 
 ##### <a name="-nginx--types_hash_max_size"></a>`types_hash_max_size`
 
-Data type: `Variant[Integer,String]`
+Data type: `Optional[Integer]`
 
 
 
-Default value: `'1024'`
+Default value: `undef`
 
 ##### <a name="-nginx--worker_connections"></a>`worker_connections`
 
-Data type: `Integer`
+Data type: `Optional[Integer]`
 
 
 
-Default value: `1024`
+Default value: `undef`
 
 ##### <a name="-nginx--ssl_prefer_server_ciphers"></a>`ssl_prefer_server_ciphers`
 
@@ -1337,19 +1379,19 @@ Default value: `undef`
 
 ##### <a name="-nginx--ssl_protocols"></a>`ssl_protocols`
 
-Data type: `String`
+Data type: `Optional[String]`
 
 
 
-Default value: `'TLSv1 TLSv1.1 TLSv1.2'`
+Default value: `undef`
 
 ##### <a name="-nginx--ssl_ciphers"></a>`ssl_ciphers`
 
-Data type: `String`
+Data type: `Optional[String]`
 
 
 
-Default value: `'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS'`
+Default value: `undef`
 
 ##### <a name="-nginx--ssl_dhparam"></a>`ssl_dhparam`
 
@@ -1369,19 +1411,19 @@ Default value: `undef`
 
 ##### <a name="-nginx--ssl_session_cache"></a>`ssl_session_cache`
 
-Data type: `String`
+Data type: `Optional[String]`
 
 
 
-Default value: `'shared:SSL:10m'`
+Default value: `undef`
 
 ##### <a name="-nginx--ssl_session_timeout"></a>`ssl_session_timeout`
 
-Data type: `Nginx::Time`
+Data type: `Optional[Nginx::Time]`
 
 
 
-Default value: `'5m'`
+Default value: `undef`
 
 ##### <a name="-nginx--ssl_session_tickets"></a>`ssl_session_tickets`
 
@@ -1746,9 +1788,7 @@ nginx::resource::geo { 'client_network':
   proxy_recursive => false,
   proxies         => [ '192.168.99.99' ],
   networks        => {
-    '10.0.0.0/8'     => 'intra',
-    '172.16.0.0/12'  => 'intra',
-    '192.168.0.0/16' => 'intra',
+    'intra' => ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'],
   }
 }
 ```
@@ -1756,6 +1796,12 @@ nginx::resource::geo { 'client_network':
 ##### Hiera usage
 
 ```puppet
+# Define network lists that can be reused
+my_internal_networks: &internal_nets
+  - '10.0.0.0/8'
+  - '172.16.0.0/12'
+  - '192.168.0.0/16'
+
 nginx::geo_mappings:
   client_network:
     ensure: present
@@ -1763,11 +1809,9 @@ nginx::geo_mappings:
     default: 'extra'
     proxy_recursive: false
     proxies:
-       - 192.168.99.99
+      - 192.168.99.99
     networks:
-      '10.0.0.0/8': 'intra'
-      '172.16.0.0/12': 'intra'
-      '192.168.0.0/16': 'intra'
+      intra: *internal_nets
 ```
 
 #### Parameters
@@ -1785,9 +1829,9 @@ The following parameters are available in the `nginx::resource::geo` defined typ
 
 ##### <a name="-nginx--resource--geo--networks"></a>`networks`
 
-Data type: `Hash`
+Data type: `Hash[String[1], Array[String[1]]]`
 
-Hash of geo lookup keys and resultant values
+Hash where keys are geo result values and values are network CIDR arrays.
 
 ##### <a name="-nginx--resource--geo--default"></a>`default`
 
@@ -1948,6 +1992,7 @@ The following parameters are available in the `nginx::resource::location` define
 * [`proxy_pass_header`](#-nginx--resource--location--proxy_pass_header)
 * [`proxy_ignore_header`](#-nginx--resource--location--proxy_ignore_header)
 * [`proxy_next_upstream`](#-nginx--resource--location--proxy_next_upstream)
+* [`grpc`](#-nginx--resource--location--grpc)
 * [`fastcgi`](#-nginx--resource--location--fastcgi)
 * [`fastcgi_param`](#-nginx--resource--location--fastcgi_param)
 * [`fastcgi_params`](#-nginx--resource--location--fastcgi_params)
@@ -1990,13 +2035,24 @@ The following parameters are available in the `nginx::resource::location` define
 * [`auth_basic`](#-nginx--resource--location--auth_basic)
 * [`auth_basic_user_file`](#-nginx--resource--location--auth_basic_user_file)
 * [`auth_request`](#-nginx--resource--location--auth_request)
+* [`client_max_body_size`](#-nginx--resource--location--client_max_body_size)
+* [`client_body_timeout`](#-nginx--resource--location--client_body_timeout)
+* [`client_body_buffer_size`](#-nginx--resource--location--client_body_buffer_size)
+* [`send_timeout`](#-nginx--resource--location--send_timeout)
 * [`priority`](#-nginx--resource--location--priority)
 * [`mp4`](#-nginx--resource--location--mp4)
 * [`flv`](#-nginx--resource--location--flv)
+* [`dav_methods`](#-nginx--resource--location--dav_methods)
+* [`dav_access`](#-nginx--resource--location--dav_access)
+* [`create_full_put_path`](#-nginx--resource--location--create_full_put_path)
+* [`min_delete_depth`](#-nginx--resource--location--min_delete_depth)
 * [`expires`](#-nginx--resource--location--expires)
 * [`add_header`](#-nginx--resource--location--add_header)
 * [`gzip_static`](#-nginx--resource--location--gzip_static)
 * [`reset_timedout_connection`](#-nginx--resource--location--reset_timedout_connection)
+* [`real_ip_header`](#-nginx--resource--location--real_ip_header)
+* [`real_ip_recursive`](#-nginx--resource--location--real_ip_recursive)
+* [`set_real_ip_from`](#-nginx--resource--location--set_real_ip_from)
 * [`format_log`](#-nginx--resource--location--format_log)
 * [`access_log`](#-nginx--resource--location--access_log)
 * [`error_log`](#-nginx--resource--location--error_log)
@@ -2133,7 +2189,7 @@ Default value: `undef`
 
 ##### <a name="-nginx--resource--location--proxy_redirect"></a>`proxy_redirect`
 
-Data type: `Optional[Variant[Array[String],String]]`
+Data type: `Optional[Variant[Array[String], String]]`
 
 sets the text, which must be changed in response-header "Location" and
 "Refresh" in the response of the proxied server.
@@ -2142,7 +2198,7 @@ Default value: `$nginx::proxy_redirect`
 
 ##### <a name="-nginx--resource--location--proxy_read_timeout"></a>`proxy_read_timeout`
 
-Data type: `String`
+Data type: `Optional[Nginx::Time]`
 
 Override the default the proxy read timeout value of 90 seconds
 
@@ -2150,7 +2206,7 @@ Default value: `$nginx::proxy_read_timeout`
 
 ##### <a name="-nginx--resource--location--proxy_connect_timeout"></a>`proxy_connect_timeout`
 
-Data type: `String`
+Data type: `Optional[Nginx::Time]`
 
 Override the default the proxy connect timeout value of 90 seconds
 
@@ -2158,7 +2214,7 @@ Default value: `$nginx::proxy_connect_timeout`
 
 ##### <a name="-nginx--resource--location--proxy_send_timeout"></a>`proxy_send_timeout`
 
-Data type: `String`
+Data type: `Optional[Nginx::Time]`
 
 Override the default the proxy send timeout
 value of 90 seconds
@@ -2202,6 +2258,14 @@ Default value: `$nginx::proxy_ignore_header`
 Data type: `Optional[String]`
 
 Specify cases a request should be passed to the next server in the upstream.
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--location--grpc"></a>`grpc`
+
+Data type: `Optional[String]`
+
+Sets the gRPC server address (`grpc_pass`)
 
 Default value: `undef`
 
@@ -2333,7 +2397,7 @@ Default value: `undef`
 
 ##### <a name="-nginx--resource--location--limit_zone"></a>`limit_zone`
 
-Data type: `Optional[Variant[String[1],Array[String[1],1]]]`
+Data type: `Optional[Variant[String[1], Array[String[1], 1]]]`
 
 Apply a limit_req_zone to the location. Expects a string or array of
 strings indicating a previously defined limit_req_zone in the main nginx
@@ -2432,7 +2496,7 @@ Default value: `undef`
 
 ##### <a name="-nginx--resource--location--proxy_cache_valid"></a>`proxy_cache_valid`
 
-Data type: `Optional[Variant[Array, String]]`
+Data type: `Optional[Variant[Array, String, Hash[String[1], String[1]]]]`
 
 This directive sets the time for caching different replies.
 
@@ -2562,6 +2626,38 @@ This allows you to specify a custom auth endpoint
 
 Default value: `undef`
 
+##### <a name="-nginx--resource--location--client_max_body_size"></a>`client_max_body_size`
+
+Data type: `Optional[Nginx::Size]`
+
+Sets the maximum allowed size of the client request body.
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--location--client_body_timeout"></a>`client_body_timeout`
+
+Data type: `Optional[Nginx::Time]`
+
+Defines a timeout for reading client request body.
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--location--client_body_buffer_size"></a>`client_body_buffer_size`
+
+Data type: `Optional[Nginx::Size]`
+
+Sets buffer size for reading client request body.
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--location--send_timeout"></a>`send_timeout`
+
+Data type: `Optional[Nginx::Time]`
+
+Sets a timeout for transmitting a response to the client.
+
+Default value: `undef`
+
 ##### <a name="-nginx--resource--location--priority"></a>`priority`
 
 Data type: `Integer[401, 599]`
@@ -2589,6 +2685,42 @@ Indicates whether or not this loation can be
 used for flv streaming. Default: false
 
 Default value: `false`
+
+##### <a name="-nginx--resource--location--dav_methods"></a>`dav_methods`
+
+Data type: `Optional[Variant[Enum['off'], Array[Enum['PUT', 'DELETE', 'MKCOL', 'COPY', 'MOVE'], 1]]]`
+
+Defines the HTTP methods allowed for WebDAV.
+Possible values: 'off' or an array of: 'PUT', 'DELETE', 'MKCOL', 'COPY', 'MOVE'.
+Example: ['PUT', 'DELETE', 'MKCOL', 'COPY', 'MOVE']
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--location--dav_access"></a>`dav_access`
+
+Data type: `Optional[String[1]]`
+
+Sets permissions for newly created files and directories.
+Example: 'user:rw group:rw all:r'
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--location--create_full_put_path"></a>`create_full_put_path`
+
+Data type: `Optional[Enum['on', 'off']]`
+
+Enables creating intermediate directories for PUT requests.
+Valid values: 'on' or 'off'
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--location--min_delete_depth"></a>`min_delete_depth`
+
+Data type: `Optional[Integer[0]]`
+
+Minimum number of path elements in a request to allow DELETE.
+
+Default value: `undef`
 
 ##### <a name="-nginx--resource--location--expires"></a>`expires`
 
@@ -2621,6 +2753,36 @@ Data type: `Optional[Enum['on', 'off']]`
 
 Enables or disables resetting timed out connections and connections closed
 with the non-standard code 444.
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--location--real_ip_header"></a>`real_ip_header`
+
+Data type: `Optional[String[1]]`
+
+Defines the request header field whose value will be used to replace the
+client address. See http://nginx.org/en/docs/http/ngx_http_realip_module.html
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--location--real_ip_recursive"></a>`real_ip_recursive`
+
+Data type: `Optional[Enum['on', 'off']]`
+
+If disabled, the original client address that matches one of the trusted
+addresses is replaced by the last address sent in the request header field.
+If enabled, the original client address that matches one of the trusted
+addresses is replaced by the last non-trusted address sent in the request
+header field.
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--location--set_real_ip_from"></a>`set_real_ip_from`
+
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
+
+Defines trusted addresses that are known to send correct replacement
+addresses.
 
 Default value: `undef`
 
@@ -2813,11 +2975,13 @@ Default value: `$listen_port`
 
 ##### <a name="-nginx--resource--mailhost--ipv6_listen_options"></a>`ipv6_listen_options`
 
-Data type: `String`
+Data type: `Optional[String[1]]`
 
-Extra options for listen directive like 'default' to catchall.
+Extra options for listen directive like 'default' to catchall. Defaults to
+'ipv6only=on'. If listen_options is set, those options are inherited with
+'ipv6only=on' appended.
 
-Default value: `'default ipv6only=on'`
+Default value: `undef`
 
 ##### <a name="-nginx--resource--mailhost--ssl"></a>`ssl`
 
@@ -2838,7 +3002,7 @@ Default value: `undef`
 
 ##### <a name="-nginx--resource--mailhost--ssl_ciphers"></a>`ssl_ciphers`
 
-Data type: `String`
+Data type: `Optional[String]`
 
 Override default SSL ciphers.
 
@@ -2915,7 +3079,7 @@ Default value: `$nginx::ssl_prefer_server_ciphers`
 
 ##### <a name="-nginx--resource--mailhost--ssl_protocols"></a>`ssl_protocols`
 
-Data type: `String`
+Data type: `Optional[String]`
 
 SSL protocols enabled.
 
@@ -3340,7 +3504,14 @@ The following parameters are available in the `nginx::resource::server` defined 
 * [`autoindex_exact_size`](#-nginx--resource--server--autoindex_exact_size)
 * [`autoindex_format`](#-nginx--resource--server--autoindex_format)
 * [`autoindex_localtime`](#-nginx--resource--server--autoindex_localtime)
+* [`dav_methods`](#-nginx--resource--server--dav_methods)
+* [`dav_access`](#-nginx--resource--server--dav_access)
+* [`create_full_put_path`](#-nginx--resource--server--create_full_put_path)
+* [`min_delete_depth`](#-nginx--resource--server--min_delete_depth)
 * [`reset_timedout_connection`](#-nginx--resource--server--reset_timedout_connection)
+* [`real_ip_header`](#-nginx--resource--server--real_ip_header)
+* [`real_ip_recursive`](#-nginx--resource--server--real_ip_recursive)
+* [`set_real_ip_from`](#-nginx--resource--server--set_real_ip_from)
 * [`proxy`](#-nginx--resource--server--proxy)
 * [`proxy_read_timeout`](#-nginx--resource--server--proxy_read_timeout)
 * [`proxy_send_timeout`](#-nginx--resource--server--proxy_send_timeout)
@@ -3349,6 +3520,8 @@ The following parameters are available in the `nginx::resource::server` defined 
 * [`proxy_request_buffering`](#-nginx--resource--server--proxy_request_buffering)
 * [`proxy_max_temp_file_size`](#-nginx--resource--server--proxy_max_temp_file_size)
 * [`proxy_busy_buffers_size`](#-nginx--resource--server--proxy_busy_buffers_size)
+* [`proxy_next_upstream`](#-nginx--resource--server--proxy_next_upstream)
+* [`grpc`](#-nginx--resource--server--grpc)
 * [`resolver`](#-nginx--resource--server--resolver)
 * [`fastcgi`](#-nginx--resource--server--fastcgi)
 * [`fastcgi_param`](#-nginx--resource--server--fastcgi_param)
@@ -3425,6 +3598,7 @@ The following parameters are available in the `nginx::resource::server` defined 
 * [`passenger_pre_start`](#-nginx--resource--server--passenger_pre_start)
 * [`log_by_lua`](#-nginx--resource--server--log_by_lua)
 * [`log_by_lua_file`](#-nginx--resource--server--log_by_lua_file)
+* [`use_default_location`](#-nginx--resource--server--use_default_location)
 * [`gzip_types`](#-nginx--resource--server--gzip_types)
 * [`gzip_static`](#-nginx--resource--server--gzip_static)
 * [`owner`](#-nginx--resource--server--owner)
@@ -3449,7 +3623,6 @@ The following parameters are available in the `nginx::resource::server` defined 
 * [`location_custom_cfg_prepend`](#-nginx--resource--server--location_custom_cfg_prepend)
 * [`location_custom_cfg_append`](#-nginx--resource--server--location_custom_cfg_append)
 * [`format_log`](#-nginx--resource--server--format_log)
-* [`use_default_location`](#-nginx--resource--server--use_default_location)
 * [`rewrite_rules`](#-nginx--resource--server--rewrite_rules)
 * [`string_mappings`](#-nginx--resource--server--string_mappings)
 * [`geo_mappings`](#-nginx--resource--server--geo_mappings)
@@ -3563,11 +3736,13 @@ Default value: `$listen_port`
 
 ##### <a name="-nginx--resource--server--ipv6_listen_options"></a>`ipv6_listen_options`
 
-Data type: `String`
+Data type: `Optional[String[1]]`
 
-Extra options for listen directive like 'default' to catchall.
+Extra options for listen directive like 'default' to catchall. Defaults to
+'ipv6only=on'. If listen_options is set, those options are inherited with
+'ipv6only=on' appended.
 
-Default value: `'default ipv6only=on'`
+Default value: `undef`
 
 ##### <a name="-nginx--resource--server--add_header"></a>`add_header`
 
@@ -3628,12 +3803,78 @@ local time zone or UTC.
 
 Default value: `undef`
 
+##### <a name="-nginx--resource--server--dav_methods"></a>`dav_methods`
+
+Data type: `Optional[Variant[Enum['off'], Array[Enum['PUT', 'DELETE', 'MKCOL', 'COPY', 'MOVE'], 1]]]`
+
+Defines the HTTP methods allowed for WebDAV.
+Possible values: 'off' or an array of: 'PUT', 'DELETE', 'MKCOL', 'COPY', 'MOVE'.
+Example: ['PUT', 'DELETE', 'MKCOL', 'COPY', 'MOVE']
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--server--dav_access"></a>`dav_access`
+
+Data type: `Optional[String[1]]`
+
+Sets permissions for newly created files and directories.
+Example: 'user:rw group:rw all:r'
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--server--create_full_put_path"></a>`create_full_put_path`
+
+Data type: `Optional[Enum['on', 'off']]`
+
+Enables creating intermediate directories for PUT requests.
+Valid values: 'on' or 'off'
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--server--min_delete_depth"></a>`min_delete_depth`
+
+Data type: `Optional[Integer[0]]`
+
+Minimum number of path elements in a request to allow DELETE.
+
+Default value: `undef`
+
 ##### <a name="-nginx--resource--server--reset_timedout_connection"></a>`reset_timedout_connection`
 
 Data type: `Optional[Enum['on', 'off']]`
 
 Enables or disables resetting timed out connections and connections closed
 with the non-standard code 444.
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--server--real_ip_header"></a>`real_ip_header`
+
+Data type: `Optional[String[1]]`
+
+Defines the request header field whose value will be used to replace the
+client address. See http://nginx.org/en/docs/http/ngx_http_realip_module.html
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--server--real_ip_recursive"></a>`real_ip_recursive`
+
+Data type: `Optional[Enum['on', 'off']]`
+
+If disabled, the original client address that matches one of the trusted
+addresses is replaced by the last address sent in the request header field.
+If enabled, the original client address that matches one of the trusted
+addresses is replaced by the last non-trusted address sent in the request
+header field.
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--server--set_real_ip_from"></a>`set_real_ip_from`
+
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
+
+Defines trusted addresses that are known to send correct replacement
+addresses.
 
 Default value: `undef`
 
@@ -3648,7 +3889,7 @@ Default value: `undef`
 
 ##### <a name="-nginx--resource--server--proxy_read_timeout"></a>`proxy_read_timeout`
 
-Data type: `String`
+Data type: `Optional[Nginx::Time]`
 
 Override the default proxy read timeout value of 90 seconds
 
@@ -3656,7 +3897,7 @@ Default value: `$nginx::proxy_read_timeout`
 
 ##### <a name="-nginx--resource--server--proxy_send_timeout"></a>`proxy_send_timeout`
 
-Data type: `String`
+Data type: `Optional[Nginx::Time]`
 
 Override the default proxy send timeout value of 90 seconds
 
@@ -3664,7 +3905,7 @@ Default value: `$nginx::proxy_send_timeout`
 
 ##### <a name="-nginx--resource--server--proxy_redirect"></a>`proxy_redirect`
 
-Data type: `Optional[Variant[Array[String],String]]`
+Data type: `Optional[Variant[Array[String], String]]`
 
 Override the default proxy_redirect value of off.
 
@@ -3700,6 +3941,22 @@ Data type: `Optional[Nginx::Size]`
 
 Sets the total size of buffers that can be busy sending a response to the
 client while the response is not yet fully read.
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--server--proxy_next_upstream"></a>`proxy_next_upstream`
+
+Data type: `Optional[String[1]]`
+
+Specify cases a request should be passed to the next server in the upstream.
+
+Default value: `undef`
+
+##### <a name="-nginx--resource--server--grpc"></a>`grpc`
+
+Data type: `Optional[String]`
+
+Sets the gRPC server address (`grpc_pass`)
 
 Default value: `undef`
 
@@ -4066,7 +4323,7 @@ Default value: `undef`
 
 ##### <a name="-nginx--resource--server--proxy_cache_valid"></a>`proxy_cache_valid`
 
-Data type: `Optional[Variant[Array[String], String]]`
+Data type: `Optional[Variant[Array[String], String, Hash[String[1], String[1]]]]`
 
 This directive sets the time for caching different replies.
 
@@ -4349,6 +4606,17 @@ release, the Lua/LuaJIT bytecode to be executed.
 
 Default value: `undef`
 
+##### <a name="-nginx--resource--server--use_default_location"></a>`use_default_location`
+
+Data type: `Boolean`
+
+When true, this module creates a default location block for
+'/' that sets the root directive. Set to false if you want to define your
+own root location, or if you prefer to set 'root' in the server block
+rather than in a location block.
+
+Default value: `true`
+
 ##### <a name="-nginx--resource--server--gzip_types"></a>`gzip_types`
 
 Data type: `Optional[String]`
@@ -4447,7 +4715,7 @@ Default value: `undef`
 
 ##### <a name="-nginx--resource--server--proxy_connect_timeout"></a>`proxy_connect_timeout`
 
-Data type: `Any`
+Data type: `Optional[Nginx::Time]`
 
 
 
@@ -4540,14 +4808,6 @@ Data type: `Optional[String]`
 
 
 Default value: `$nginx::http_format_log`
-
-##### <a name="-nginx--resource--server--use_default_location"></a>`use_default_location`
-
-Data type: `Any`
-
-
-
-Default value: `true`
 
 ##### <a name="-nginx--resource--server--rewrite_rules"></a>`rewrite_rules`
 
@@ -4722,12 +4982,13 @@ Default value: `$listen_port`
 
 ##### <a name="-nginx--resource--streamhost--ipv6_listen_options"></a>`ipv6_listen_options`
 
-Data type: `String`
+Data type: `Optional[String[1]]`
 
-Extra options for listen directive like 'default' to
-catchall.
+Extra options for listen directive like 'default' to catchall. Defaults to
+'ipv6only=on'. If listen_options is set, those options are inherited with
+'ipv6only=on' appended.
 
-Default value: `'default ipv6only=on'`
+Default value: `undef`
 
 ##### <a name="-nginx--resource--streamhost--proxy"></a>`proxy`
 
@@ -4740,7 +5001,7 @@ Default value: `undef`
 
 ##### <a name="-nginx--resource--streamhost--proxy_read_timeout"></a>`proxy_read_timeout`
 
-Data type: `String`
+Data type: `Optional[Nginx::Time]`
 
 Override the default the proxy read timeout value of 90 seconds
 
@@ -4801,7 +5062,7 @@ Default value: `$nginx::global_mode`
 
 ##### <a name="-nginx--resource--streamhost--proxy_connect_timeout"></a>`proxy_connect_timeout`
 
-Data type: `Any`
+Data type: `Optional[Nginx::Time]`
 
 
 
@@ -5146,7 +5407,7 @@ Default value: `'http'`
 
 ##### <a name="-nginx--resource--upstream--member--server"></a>`server`
 
-Data type: `Optional[Nginx::UpstreamMemberServer]`
+Data type: `Nginx::UpstreamMemberServer`
 
 Hostname or IP of the upstream member server
 
@@ -5234,7 +5495,7 @@ Default value: `undef`
 
 ##### <a name="-nginx--resource--upstream--member--state"></a>`state`
 
-Data type: `Optional[Enum['drain','down']]`
+Data type: `Optional[Enum['drain', 'down']]`
 
 Set the state for this upstream member
 
