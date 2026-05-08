@@ -517,8 +517,8 @@ describe 'nginx::resource::upstream' do
               let(:conf_d_path) { conf_d_pathes[upstreamcontext.to_sym] }
 
               it {
-                is_expected.to contain_concat("#{conf_d_path}/#{title}-upstream.conf").
-                  that_notifies('Class[nginx::service]')
+                is_expected.to contain_concat("#{conf_d_path}/#{title}-upstream.conf")
+                  .that_notifies('Class[nginx::service]')
               }
             end
           end

@@ -285,7 +285,7 @@ describe 'nginx' do
         describe 'when reload => undef' do
           let :params do
             {
-              reload: :undef
+              reload: :undef,
             }
           end
 
