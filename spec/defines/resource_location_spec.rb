@@ -1232,6 +1232,30 @@ describe 'nginx::resource::location' do
               match: %r{\s+proxy_connect_timeout\s+10;},
             },
             {
+              title: 'should set proxy_send_timeout',
+              attr: 'proxy_send_timeout',
+              value: '30s',
+              match: %r{\s+proxy_send_timeout\s+30s;},
+            },
+            {
+              title: 'should not set proxy_read_timeout',
+              attr: 'proxy_read_timeout',
+              value: :undef,
+              notmatch: %r{proxy_read_timeout},
+            },
+            {
+              title: 'should not set proxy_connect_timeout',
+              attr: 'proxy_connect_timeout',
+              value: :undef,
+              notmatch: %r{proxy_connect_timeout},
+            },
+            {
+              title: 'should not set proxy_send_timeout',
+              attr: 'proxy_send_timeout',
+              value: :undef,
+              notmatch: %r{proxy_send_timeout},
+            },
+            {
               title: 'should set proxy headers',
               attr: 'proxy_set_header',
               value: ['X-TestHeader1 value1', 'X-TestHeader2 value2'],
@@ -1239,6 +1263,12 @@ describe 'nginx::resource::location' do
                 %r{^\s+proxy_set_header\s+X-TestHeader1 value1;},
                 %r{^\s+proxy_set_header\s+X-TestHeader2 value2;},
               ],
+            },
+            {
+              title: 'should not set proxy headers',
+              attr: 'proxy_set_header',
+              value: :undef,
+              notmatch: %r{proxy_set_header},
             },
             {
               title: 'should hide proxy headers',
@@ -1250,6 +1280,12 @@ describe 'nginx::resource::location' do
               ],
             },
             {
+              title: 'should not hide proxy headers',
+              attr: 'proxy_hide_header',
+              value: :undef,
+              notmatch: %r{proxy_hide_header},
+            },
+            {
               title: 'should pass proxy headers',
               attr: 'proxy_pass_header',
               value: ['X-TestHeader1 value1', 'X-TestHeader2 value2'],
@@ -1257,6 +1293,12 @@ describe 'nginx::resource::location' do
                 %r{^\s+proxy_pass_header\s+X-TestHeader1 value1;},
                 %r{^\s+proxy_pass_header\s+X-TestHeader2 value2;},
               ],
+            },
+            {
+              title: 'should not pass proxy headers',
+              attr: 'proxy_pass_header',
+              value: :undef,
+              notmatch: %r{proxy_pass_header},
             },
             {
               title: 'should set proxy_http_version',
@@ -1349,6 +1391,39 @@ describe 'nginx::resource::location' do
             end
 
             it { is_expected.to contain_concat__fragment("server1-500-#{Digest::MD5.hexdigest('location')}").with_content(%r{proxy_cache_valid\s+10m;}) }
+          end
+
+          context 'when global proxy directives are set on the nginx class' do
+            let(:pre_condition) do
+              <<~PUPPET
+                class { 'nginx':
+                  proxy_redirect        => 'default',
+                  proxy_read_timeout    => '91s',
+                  proxy_connect_timeout => '92s',
+                  proxy_send_timeout    => '93s',
+                  proxy_set_header      => ['X-Global-Set value'],
+                  proxy_hide_header     => ['X-Global-Hide'],
+                  proxy_pass_header     => ['X-Global-Pass'],
+                }
+              PUPPET
+            end
+            let(:params) { { location: 'location', proxy: 'proxy_value', server: 'server1' } }
+
+            it 'does not repeat them in the location' do
+              is_expected.to contain_concat__fragment("server1-500-#{Digest::MD5.hexdigest('location')}")
+                .without_content(%r{proxy_redirect|proxy_read_timeout|proxy_connect_timeout|proxy_send_timeout|proxy_set_header|proxy_hide_header|proxy_pass_header})
+            end
+
+            it 'renders them in nginx.conf' do
+              is_expected.to contain_file('/etc/nginx/nginx.conf')
+                .with_content(%r{^\s+proxy_redirect\s+default;})
+                .with_content(%r{^\s+proxy_read_timeout\s+91s;})
+                .with_content(%r{^\s+proxy_connect_timeout\s+92s;})
+                .with_content(%r{^\s+proxy_send_timeout\s+93s;})
+                .with_content(%r{^\s+proxy_set_header\s+X-Global-Set value;})
+                .with_content(%r{^\s+proxy_hide_header\s+X-Global-Hide;})
+                .with_content(%r{^\s+proxy_pass_header\s+X-Global-Pass;})
+            end
           end
         end
 

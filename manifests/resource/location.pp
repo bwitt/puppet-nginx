@@ -37,20 +37,26 @@
 #   be used in conjunction with nginx::resource::upstream
 # @param proxy_redirect
 #   sets the text, which must be changed in response-header "Location" and
-#   "Refresh" in the response of the proxied server.
+#   "Refresh" in the response of the proxied server. Inherited from
+#   `nginx::proxy_redirect` in the http block when unset.
 # @param proxy_read_timeout
-#   Override the default the proxy read timeout value of 90 seconds
+#   Override the proxy read timeout. Inherited from
+#   `nginx::proxy_read_timeout` in the http block when unset.
 # @param proxy_connect_timeout
-#   Override the default the proxy connect timeout value of 90 seconds
+#   Override the proxy connect timeout. Inherited from
+#   `nginx::proxy_connect_timeout` in the http block when unset.
 # @param proxy_send_timeout
-#   Override the default the proxy send timeout
-#   value of 90 seconds
+#   Override the proxy send timeout. Inherited from
+#   `nginx::proxy_send_timeout` in the http block when unset.
 # @param proxy_set_header
-#   Array of server headers to set
+#   Array of server headers to set. Replaces (does not extend)
+#   `nginx::proxy_set_header`, which is inherited from the http block when empty.
 # @param proxy_hide_header
-#   Array of server headers to hide
+#   Array of server headers to hide. Replaces (does not extend)
+#   `nginx::proxy_hide_header`, which is inherited from the http block when empty.
 # @param proxy_pass_header
-#   Array of server headers to pass
+#   Array of server headers to pass. Replaces (does not extend)
+#   `nginx::proxy_pass_header`, which is inherited from the http block when empty.
 # @param proxy_ignore_header
 #   Array of server headers to ignore
 # @param proxy_next_upstream
@@ -305,13 +311,13 @@ define nginx::resource::location (
     'index.php',
   ],
   Optional[String] $proxy = undef,
-  Optional[Variant[Array[String], String]] $proxy_redirect = $nginx::proxy_redirect,
-  Optional[Nginx::Time] $proxy_read_timeout = $nginx::proxy_read_timeout,
-  Optional[Nginx::Time] $proxy_connect_timeout = $nginx::proxy_connect_timeout,
-  Optional[Nginx::Time] $proxy_send_timeout = $nginx::proxy_send_timeout,
-  Array $proxy_set_header = $nginx::proxy_set_header,
-  Array $proxy_hide_header = $nginx::proxy_hide_header,
-  Array $proxy_pass_header = $nginx::proxy_pass_header,
+  Optional[Variant[Array[String], String]] $proxy_redirect = undef,
+  Optional[Nginx::Time] $proxy_read_timeout = undef,
+  Optional[Nginx::Time] $proxy_connect_timeout = undef,
+  Optional[Nginx::Time] $proxy_send_timeout = undef,
+  Array $proxy_set_header = [],
+  Array $proxy_hide_header = [],
+  Array $proxy_pass_header = [],
   Array $proxy_ignore_header = $nginx::proxy_ignore_header,
   Optional[String] $proxy_next_upstream = undef,
   Optional[Integer] $proxy_next_upstream_tries = undef,

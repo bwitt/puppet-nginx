@@ -1717,6 +1717,52 @@ describe 'nginx::resource::server' do
             it { is_expected.to contain_nginx__resource__location("#{title}-default").with_grpc('127.0.0.1:9000') }
           end
 
+          context 'when proxy is set and global proxy directives are set on the nginx class' do
+            let(:pre_condition) do
+              <<~PUPPET
+                class { 'nginx':
+                  proxy_read_timeout    => '91s',
+                  proxy_connect_timeout => '92s',
+                  proxy_send_timeout    => '93s',
+                  proxy_set_header      => ['X-Global-Set value'],
+                  proxy_hide_header     => ['X-Global-Hide'],
+                  proxy_pass_header     => ['X-Global-Pass'],
+                }
+              PUPPET
+            end
+            let(:params) { { proxy: 'http://backend' } }
+
+            it 'does not repeat them in the default location' do
+              is_expected.to contain_concat__fragment("#{title}-500-#{Digest::MD5.hexdigest('/')}")
+                .with_content(%r{proxy_pass\s+http://backend;})
+                .without_content(%r{proxy_read_timeout|proxy_connect_timeout|proxy_send_timeout|proxy_set_header|proxy_hide_header|proxy_pass_header})
+            end
+          end
+
+          context 'when proxy directives are set on the server' do
+            let :params do
+              {
+                proxy: 'http://backend',
+                proxy_read_timeout: '20s',
+                proxy_connect_timeout: '21s',
+                proxy_send_timeout: '22s',
+                proxy_set_header: ['X-Server-Set value'],
+                proxy_hide_header: ['X-Server-Hide'],
+                proxy_pass_header: ['X-Server-Pass'],
+              }
+            end
+
+            it 'renders them in the default location' do
+              is_expected.to contain_concat__fragment("#{title}-500-#{Digest::MD5.hexdigest('/')}")
+                .with_content(%r{^\s+proxy_read_timeout\s+20s;})
+                .with_content(%r{^\s+proxy_connect_timeout\s+21s;})
+                .with_content(%r{^\s+proxy_send_timeout\s+22s;})
+                .with_content(%r{^\s+proxy_set_header\s+X-Server-Set value;})
+                .with_content(%r{^\s+proxy_hide_header\s+X-Server-Hide;})
+                .with_content(%r{^\s+proxy_pass_header\s+X-Server-Pass;})
+            end
+          end
+
           context 'when fastcgi => "localhost:9000"' do
             let :params do
               default_params.merge(fastcgi: 'localhost:9000')

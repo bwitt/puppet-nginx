@@ -2212,58 +2212,64 @@ Default value: `undef`
 Data type: `Optional[Variant[Array[String], String]]`
 
 sets the text, which must be changed in response-header "Location" and
-"Refresh" in the response of the proxied server.
+"Refresh" in the response of the proxied server. Inherited from
+`nginx::proxy_redirect` in the http block when unset.
 
-Default value: `$nginx::proxy_redirect`
+Default value: `undef`
 
 ##### <a name="-nginx--resource--location--proxy_read_timeout"></a>`proxy_read_timeout`
 
 Data type: `Optional[Nginx::Time]`
 
-Override the default the proxy read timeout value of 90 seconds
+Override the proxy read timeout. Inherited from
+`nginx::proxy_read_timeout` in the http block when unset.
 
-Default value: `$nginx::proxy_read_timeout`
+Default value: `undef`
 
 ##### <a name="-nginx--resource--location--proxy_connect_timeout"></a>`proxy_connect_timeout`
 
 Data type: `Optional[Nginx::Time]`
 
-Override the default the proxy connect timeout value of 90 seconds
+Override the proxy connect timeout. Inherited from
+`nginx::proxy_connect_timeout` in the http block when unset.
 
-Default value: `$nginx::proxy_connect_timeout`
+Default value: `undef`
 
 ##### <a name="-nginx--resource--location--proxy_send_timeout"></a>`proxy_send_timeout`
 
 Data type: `Optional[Nginx::Time]`
 
-Override the default the proxy send timeout
-value of 90 seconds
+Override the proxy send timeout. Inherited from
+`nginx::proxy_send_timeout` in the http block when unset.
 
-Default value: `$nginx::proxy_send_timeout`
+Default value: `undef`
 
 ##### <a name="-nginx--resource--location--proxy_set_header"></a>`proxy_set_header`
 
 Data type: `Array`
 
-Array of server headers to set
+Array of server headers to set. Replaces (does not extend)
+`nginx::proxy_set_header`, which is inherited from the http block when empty.
 
-Default value: `$nginx::proxy_set_header`
+Default value: `[]`
 
 ##### <a name="-nginx--resource--location--proxy_hide_header"></a>`proxy_hide_header`
 
 Data type: `Array`
 
-Array of server headers to hide
+Array of server headers to hide. Replaces (does not extend)
+`nginx::proxy_hide_header`, which is inherited from the http block when empty.
 
-Default value: `$nginx::proxy_hide_header`
+Default value: `[]`
 
 ##### <a name="-nginx--resource--location--proxy_pass_header"></a>`proxy_pass_header`
 
 Data type: `Array`
 
-Array of server headers to pass
+Array of server headers to pass. Replaces (does not extend)
+`nginx::proxy_pass_header`, which is inherited from the http block when empty.
 
-Default value: `$nginx::proxy_pass_header`
+Default value: `[]`
 
 ##### <a name="-nginx--resource--location--proxy_ignore_header"></a>`proxy_ignore_header`
 
@@ -3938,17 +3944,19 @@ Default value: `undef`
 
 Data type: `Optional[Nginx::Time]`
 
-Override the default proxy read timeout value of 90 seconds
+Override the proxy read timeout. Inherited from
+`nginx::proxy_read_timeout` in the http block when unset.
 
-Default value: `$nginx::proxy_read_timeout`
+Default value: `undef`
 
 ##### <a name="-nginx--resource--server--proxy_send_timeout"></a>`proxy_send_timeout`
 
 Data type: `Optional[Nginx::Time]`
 
-Override the default proxy send timeout value of 90 seconds
+Override the proxy send timeout. Inherited from
+`nginx::proxy_send_timeout` in the http block when unset.
 
-Default value: `$nginx::proxy_send_timeout`
+Default value: `undef`
 
 ##### <a name="-nginx--resource--server--proxy_redirect"></a>`proxy_redirect`
 
@@ -4817,7 +4825,7 @@ Data type: `Optional[Nginx::Time]`
 
 
 
-Default value: `$nginx::proxy_connect_timeout`
+Default value: `undef`
 
 ##### <a name="-nginx--resource--server--proxy_set_header"></a>`proxy_set_header`
 
@@ -4825,7 +4833,7 @@ Data type: `Array[String]`
 
 
 
-Default value: `$nginx::proxy_set_header`
+Default value: `[]`
 
 ##### <a name="-nginx--resource--server--proxy_hide_header"></a>`proxy_hide_header`
 
@@ -4833,7 +4841,7 @@ Data type: `Array[String]`
 
 
 
-Default value: `$nginx::proxy_hide_header`
+Default value: `[]`
 
 ##### <a name="-nginx--resource--server--proxy_pass_header"></a>`proxy_pass_header`
 
@@ -4841,7 +4849,7 @@ Data type: `Array[String]`
 
 
 
-Default value: `$nginx::proxy_pass_header`
+Default value: `[]`
 
 ##### <a name="-nginx--resource--server--uwsgi"></a>`uwsgi`
 

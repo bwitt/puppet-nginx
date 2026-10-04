@@ -77,9 +77,11 @@
 #   Proxy server(s) for the root location to connect to. Accepts a single
 #   value, can be used in conjunction with nginx::resource::upstream
 # @param proxy_read_timeout
-#   Override the default proxy read timeout value of 90 seconds
+#   Override the proxy read timeout. Inherited from
+#   `nginx::proxy_read_timeout` in the http block when unset.
 # @param proxy_send_timeout
-#   Override the default proxy send timeout value of 90 seconds
+#   Override the proxy send timeout. Inherited from
+#   `nginx::proxy_send_timeout` in the http block when unset.
 # @param proxy_redirect
 #   Override the default proxy_redirect value of off.
 # @param proxy_buffering
@@ -384,12 +386,12 @@ define nginx::resource::server (
   Enum['on', 'off'] $http2 = $nginx::http2,
   Optional[String] $proxy = undef,
   Optional[Variant[Array[String], String]] $proxy_redirect = undef,
-  Optional[Nginx::Time] $proxy_read_timeout = $nginx::proxy_read_timeout,
-  Optional[Nginx::Time] $proxy_send_timeout = $nginx::proxy_send_timeout,
-  Optional[Nginx::Time] $proxy_connect_timeout = $nginx::proxy_connect_timeout,
-  Array[String] $proxy_set_header = $nginx::proxy_set_header,
-  Array[String] $proxy_hide_header = $nginx::proxy_hide_header,
-  Array[String] $proxy_pass_header = $nginx::proxy_pass_header,
+  Optional[Nginx::Time] $proxy_read_timeout = undef,
+  Optional[Nginx::Time] $proxy_send_timeout = undef,
+  Optional[Nginx::Time] $proxy_connect_timeout = undef,
+  Array[String] $proxy_set_header = [],
+  Array[String] $proxy_hide_header = [],
+  Array[String] $proxy_pass_header = [],
   Optional[String[1]] $proxy_next_upstream = undef,
   Optional[Integer] $proxy_next_upstream_tries = undef,
   Optional[Nginx::Time] $proxy_next_upstream_timeout = undef,
